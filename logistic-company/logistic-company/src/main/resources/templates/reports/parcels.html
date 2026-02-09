@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2>Справка: Пратки</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Код</th>
+                <th>Подател</th>
+                <th>Получател (име)</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th>Цена</th>
+                <th>Регистрирана от</th>
+                <th>Доставена на</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="p : ${parcels}">
+                <td th:text="${p.id}">1</td>
+                <td th:text="${p.trackingCode}">TRK-XXXX</td>
+                <td th:text="${p.sender != null && p.sender.user != null ? (p.sender.user.firstName + ' ' + p.sender.user.lastName) : ''}">Sender</td>
+                <td th:text="${p.recipientName}">Recipient</td>
+                <td th:text="${p.deliveryType}">Type</td>
+                <td th:text="${p.status}">Status</td>
+                <td th:text="${p.price}">0.00</td>
+                <td th:text="${p.registeredBy != null && p.registeredBy.user != null ? (p.registeredBy.user.firstName + ' ' + p.registeredBy.user.lastName) : ''}">Emp</td>
+                <td th:text="${p.deliveredAt}">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

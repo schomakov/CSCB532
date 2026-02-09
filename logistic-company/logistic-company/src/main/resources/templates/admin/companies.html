@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2>Компании</h2>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">Създай/Редактирай компания</div>
+                <div class="card-body">
+                    <form th:action="@{/admin/companies}" method="post" th:object="${company}">
+                        <input type="hidden" th:field="*{id}" />
+                        <div class="mb-2">
+                            <label class="form-label">Име</label>
+                            <input class="form-control" th:field="*{name}" required />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Регистрационен номер</label>
+                            <input class="form-control" th:field="*{registrationNumber}" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Офис адрес (град)</label>
+                            <input class="form-control" th:field="*{headquartersAddress.city}" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Адрес (улица)</label>
+                            <input class="form-control" th:field="*{headquartersAddress.street}" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Пощенски код</label>
+                            <input class="form-control" th:field="*{headquartersAddress.zipCode}" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Държава</label>
+                            <input class="form-control" th:field="*{headquartersAddress.country}" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Описание</label>
+                            <textarea class="form-control" th:field="*{description}"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Запази</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">Списък</div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Име</th>
+                                <th>Рег. №</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="c : ${companies}">
+                                <td th:text="${c.id}">1</td>
+                                <td th:text="${c.name}">Name</td>
+                                <td th:text="${c.registrationNumber}">Reg</td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/companies/{id}/edit(id=${c.id})}" class="btn btn-sm btn-outline-secondary">Редактирай</a>
+                                    <form th:action="@{/admin/companies/{id}/delete(id=${c.id})}" method="post" style="display:inline" onsubmit="return confirm('Изтриване?');">
+                                        <button class="btn btn-sm btn-outline-danger">Изтрий</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

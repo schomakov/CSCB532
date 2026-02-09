@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2>Справка: Приходи</h2>
+    <form class="row g-3 mb-3" method="get" th:action="@{/reports/revenue}">
+        <div class="col-auto">
+            <label class="form-label">От дата</label>
+            <input type="date" class="form-control" name="from" th:value="${from}" required>
+        </div>
+        <div class="col-auto">
+            <label class="form-label">До дата</label>
+            <input type="date" class="form-control" name="to" th:value="${to}" required>
+        </div>
+        <div class="col-auto align-self-end">
+            <button class="btn btn-primary">Покажи</button>
+        </div>
+    </form>
+    <div class="alert alert-info" th:if="${revenue != null}">
+        Приходи за периода <span th:text="${from}"></span> - <span th:text="${to}"></span>:
+        <strong th:text="${revenue}">0.00</strong> лв.
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

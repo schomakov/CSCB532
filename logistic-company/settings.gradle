@@ -1,0 +1,3 @@
+rootProject.name = "logistic-company"
+
+include 'logistic-company'

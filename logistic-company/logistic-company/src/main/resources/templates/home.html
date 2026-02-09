@@ -1,0 +1,26 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+    <div th:replace="~{header :: header}"></div>
+
+    <main class="container mt-5">
+        <h1 class="text-center mb-4">Логистична компания</h1>
+        <p class="lead text-center">Добре дошли в системата за управление на пратки.</p>
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <a href="/login" class="btn btn-primary">Вход</a>
+            <a href="/register" class="btn btn-outline-secondary">Регистрация</a>
+            <a href="/admin/users" class="btn btn-outline-dark">Администриране на потребители</a>
+        </div>
+        <div class="mt-5">
+            <div class="alert alert-info">
+                Началната страница ще бъде доразвита с клиентско табло и управление на пратки.
+            </div>
+        </div>
+    </main>
+
+    <div th:replace="~{footer :: footer}"></div>
+</body>
+</html>
+

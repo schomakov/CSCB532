@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2>Справка: Служители</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Име</th>
+                <th>Тип</th>
+                <th>Офис</th>
+                <th>Компания</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="e : ${employees}">
+                <td th:text="${e.id}">1</td>
+                <td th:text="${e.user != null ? (e.user.firstName + ' ' + e.user.lastName) : ''}">Name</td>
+                <td th:text="${e.type}">Type</td>
+                <td th:text="${e.office != null ? e.office.name : ''}">Office</td>
+                <td th:text="${e.company != null ? e.company.name : ''}">Company</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

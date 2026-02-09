@@ -1,0 +1,74 @@
+<!-- header.html -->
+<head th:fragment="head">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Логистична компания</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<header th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Логистична компания</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Начало</a>
+                    </li>
+                    <li class="nav-item" th:if="${T(com.nbu.CSCB532.global.AccessControlConfig).isAdmin()}">
+                        <a class="nav-link" href="/admin/users">Потребители</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${T(com.nbu.CSCB532.global.AccessControlConfig).isAdmin()}">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminLogisticsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Логистика
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminLogisticsDropdown">
+                            <li><a class="dropdown-item" href="/admin/companies">Компании</a></li>
+                            <li><a class="dropdown-item" href="/admin/offices">Офиси</a></li>
+                            <li><a class="dropdown-item" href="/admin/employees">Служители</a></li>
+                            <li><a class="dropdown-item" href="/admin/clients">Клиенти</a></li>
+                            <li><a class="dropdown-item" href="/admin/parcels">Пратки</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" th:if="${T(com.nbu.CSCB532.global.AccessControlConfig).isEmployee()}">
+                        <a class="nav-link" href="/employee/parcels">Служител: Пратки</a>
+                    </li>
+                    <li class="nav-item dropdown" th:if="${T(com.nbu.CSCB532.global.AccessControlConfig).isAdmin() or T(com.nbu.CSCB532.global.AccessControlConfig).isEmployee()}">
+                        <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            Справки
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="reportsDropdown">
+                            <li><a class="dropdown-item" href="/reports/employees">Служители</a></li>
+                            <li><a class="dropdown-item" href="/reports/clients">Клиенти</a></li>
+                            <li><a class="dropdown-item" href="/reports/parcels/all">Всички пратки</a></li>
+                            <li><a class="dropdown-item" href="/reports/parcels/not-received">Неполучени пратки</a></li>
+                            <li><a class="dropdown-item" href="/reports/revenue?from=2026-01-01&to=2026-12-31">Приходи</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" th:if="${T(com.nbu.CSCB532.global.AccessControlConfig).isClient()}">
+                        <a class="nav-link" href="/client/parcels">Моите пратки</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            <span th:text="${T(com.nbu.CSCB532.global.AccessControlConfig).getUsername()}">Потребител</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" th:href="@{/logout}">Изход</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
