@@ -38,6 +38,8 @@ dependencies {
      ******************************************************************************************************/
     runtimeOnly("com.h2database:h2:2.2.224")
     implementation("org.postgresql:postgresql:42.7.3")
+    // Required so Spring Boot's Liquibase failure analyzer can load (Liquibase is disabled in config)
+    runtimeOnly("org.liquibase:liquibase-core")
 
     // Spring Boot dependencies for testing
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -58,6 +60,11 @@ dependencies {
 }
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.getByName<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    args("--spring.profiles.active=local")
+    systemProperty("spring.profiles.active", "local")
 }
 
 var graduationSystemImageName = findProperty("container_registry")

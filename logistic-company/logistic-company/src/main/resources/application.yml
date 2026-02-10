@@ -7,7 +7,10 @@ logging:
   level:
     root: ${LOGGING_LEVEL:TRACE}
 
+# Default profile "local" (H2) so IDE runs work without run config; set SPRING_PROFILES_ACTIVE for PostgreSQL
 spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
   liquibase:
     enabled: false
   thymeleaf:

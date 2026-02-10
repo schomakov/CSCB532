@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2>Справки: Пратки по критерий</h2>
+
+    <div class="card mb-4">
+        <div class="card-header">Пратки по служител (регистрирани от)</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/reports/parcels/by-employee}" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label">Служител</label>
+                    <select name="employeeId" class="form-select" required>
+                        <option value="">-- Изберете служител --</option>
+                        <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.user != null ? (e.user.firstName + ' ' + e.user.lastName + ' (' + e.type + ')') : ('ID ' + e.id)}">Name</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Пратки по подател (изпратени от клиент)</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/reports/parcels/by-sender}" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label">Клиент (подател)</label>
+                    <select name="clientId" class="form-select" required>
+                        <option value="">-- Изберете клиент --</option>
+                        <option th:each="c : ${clients}" th:value="${c.id}" th:text="${c.user != null ? (c.user.firstName + ' ' + c.user.lastName) : ('ID ' + c.id)}">Client</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">Пратки по получател (получени от клиент)</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/reports/parcels/by-recipient}" class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label">Клиент (получател)</label>
+                    <select name="clientId" class="form-select" required>
+                        <option value="">-- Изберете клиент --</option>
+                        <option th:each="c : ${clients}" th:value="${c.id}" th:text="${c.user != null ? (c.user.firstName + ' ' + c.user.lastName) : ('ID ' + c.id)}">Client</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

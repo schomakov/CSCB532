@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сървиз за потребители: регистрация, търсене по потребителско име/ID и смяна на роля от администратор.
+ */
 @Service
 @RequiredArgsConstructor
 public class UserService {

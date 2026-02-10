@@ -2,6 +2,7 @@ package com.nbu.CSCB532.service.logistics;
 
 import com.nbu.CSCB532.model.logistics.DeliveryType;
 import com.nbu.CSCB532.model.logistics.Parcel;
+import com.nbu.CSCB532.model.logistics.ParcelStatus;
 import com.nbu.CSCB532.repository.logistics.ParcelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Сървиз за управление на пратки: CRUD, търсене по критерии и изчисляване на цена.
+ * Цената се определя от тегло (базова такса + лв/кг) и тип доставка (до офис по-евтино, до адрес с доплащане).
+ */
 @Service
 @RequiredArgsConstructor
 public class ParcelService {

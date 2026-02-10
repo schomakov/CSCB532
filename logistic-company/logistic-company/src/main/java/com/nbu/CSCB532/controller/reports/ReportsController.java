@@ -17,6 +17,10 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.List;
 
+/**
+ * Контролер за справки: служители, клиенти, пратки (всички, по служител/подател/получател, неполучени), приходи за период.
+ * Достъп само за администратор и служител.
+ */
 @Controller
 @RequestMapping("/reports")
 @RequiredArgsConstructor
@@ -45,6 +49,16 @@ public class ReportsController {
     public String parcelsAll(Model model) {
         model.addAttribute("parcels", parcelService.findAll());
         return "reports/parcels";
+    }
+
+    /**
+     * Страница с форми за избор на справки по служител или клиент (подател/получател).
+     */
+    @GetMapping("/parcels/select")
+    public String parcelsSelect(Model model) {
+        model.addAttribute("employees", employeeService.findAll());
+        model.addAttribute("clients", clientService.findAll());
+        return "reports/parcels-select";
     }
 
     @GetMapping("/parcels/by-employee")

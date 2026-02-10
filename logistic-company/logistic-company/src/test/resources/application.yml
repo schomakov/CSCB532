@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: local
+  liquibase:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  sql:
+    init:
+      mode: always
