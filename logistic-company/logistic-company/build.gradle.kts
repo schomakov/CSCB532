@@ -2,6 +2,7 @@ plugins {
     java
     id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
+    jacoco
 }
 
 repositories {
@@ -60,6 +61,55 @@ dependencies {
 }
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.classesDirs.files.map { dir ->
+            fileTree(dir) {
+                exclude(
+                    "com/nbu/CSCB532/LogisticCompanyApplication.class",
+                    "com/nbu/CSCB532/config/**",
+                    "com/nbu/CSCB532/model/**",
+                    "com/nbu/CSCB532/global/**",
+                    "com/nbu/CSCB532/repository/**",
+                    "com/nbu/CSCB532/controller/admin/**"
+                )
+            }
+        }
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.jacocoTestReport)
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.75".toBigDecimal()
+            }
+        }
+    }
+    classDirectories.setFrom(
+        sourceSets.main.get().output.classesDirs.files.map { dir ->
+            fileTree(dir) {
+                exclude(
+                    "com/nbu/CSCB532/LogisticCompanyApplication.class",
+                    "com/nbu/CSCB532/config/**",
+                    "com/nbu/CSCB532/model/**",
+                    "com/nbu/CSCB532/global/**",
+                    "com/nbu/CSCB532/repository/**",
+                    "com/nbu/CSCB532/controller/admin/**"
+                )
+            }
+        }
+    )
 }
 
 tasks.getByName<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {

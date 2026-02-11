@@ -43,6 +43,13 @@ public class Parcel {
     private Office toOffice; // for TO_OFFICE deliveries
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "delivery_address_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "delivery_address_city")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "delivery_address_zip_code")),
+            @AttributeOverride(name = "street", column = @Column(name = "delivery_address_street")),
+            @AttributeOverride(name = "details", column = @Column(name = "delivery_address_details"))
+    })
     private Address deliveryAddress; // for TO_ADDRESS deliveries
 
     @ManyToOne

@@ -22,6 +22,13 @@ public class Company {
     private String registrationNumber; // BULSTAT or equivalent
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "headquarters_address_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "headquarters_address_city")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "headquarters_address_zip_code")),
+            @AttributeOverride(name = "street", column = @Column(name = "headquarters_address_street")),
+            @AttributeOverride(name = "details", column = @Column(name = "headquarters_address_details"))
+    })
     private Address headquartersAddress;
 
     private String description;

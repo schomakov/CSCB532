@@ -22,6 +22,13 @@ public class Client {
     private String phone;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "default_address_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "default_address_city")),
+            @AttributeOverride(name = "zipCode", column = @Column(name = "default_address_zip_code")),
+            @AttributeOverride(name = "street", column = @Column(name = "default_address_street")),
+            @AttributeOverride(name = "details", column = @Column(name = "default_address_details"))
+    })
     private Address defaultAddress;
 }
 
