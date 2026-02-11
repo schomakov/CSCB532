@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ConcurrentModel;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.MapBindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-
-import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
