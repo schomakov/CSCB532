@@ -7,14 +7,18 @@
     <h2 class="page-title"><i class="bi bi-geo-alt"></i> Проследяване на пратка</h2>
 
     <div class="card mb-4">
-        <div class="card-header"><i class="bi bi-search"></i> Въведете код за проследяване</div>
+        <div class="card-header"><i class="bi bi-search"></i> Търсене по код или по име на клиент</div>
         <div class="card-body">
-            <form method="get" th:action="@{/employee/track}" class="row g-2 align-items-end">
-                <div class="col-md-8">
+            <form method="get" th:action="@{/employee/track}" class="row g-3 align-items-end">
+                <div class="col-md-4">
                     <label class="form-label">Код на пратка</label>
                     <input type="text" name="code" class="form-control" th:value="${code}" placeholder="напр. TRK-REG001" />
                 </div>
                 <div class="col-md-4">
+                    <label class="form-label">Име на клиент (подател или получател)</label>
+                    <input type="text" name="clientName" class="form-control" th:value="${clientName}" placeholder="част от име" />
+                </div>
+                <div class="col-auto">
                     <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Проследи</button>
                 </div>
             </form>
@@ -22,10 +26,40 @@
     </div>
 
     <div th:if="${notFound}" class="alert alert-warning">
-        <i class="bi bi-exclamation-triangle me-2"></i>Не е намерена пратка с този код.
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:if="${code != null and !code.isEmpty()}">Не е намерена пратка с този код.</span>
+        <span th:if="${(code == null or code.isEmpty()) and clientName != null and !clientName.isEmpty()}">Не са намерени пратки за това име.</span>
     </div>
 
-    <div th:if="${parcel != null and allowed}" class="card">
+    <div th:if="${parcelsByClientName != null and !parcelsByClientName.isEmpty()}" class="card mb-4">
+        <div class="card-header">Намерени пратки (<span th:text="${parcelsByClientName.size()}">0</span>)</div>
+        <div class="card-body p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                <tr>
+                    <th>Код</th>
+                    <th>Подател</th>
+                    <th>Получател</th>
+                    <th>Статус</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="p : ${parcelsByClientName}">
+                    <td th:text="${p.trackingCode}">TRK-XXX</td>
+                    <td th:text="${p.sender != null and p.sender.user != null ? (p.sender.user.firstName + ' ' + p.sender.user.lastName) : '-'}">-</td>
+                    <td th:text="${p.recipientName}">-</td>
+                    <td th:text="${p.status}">-</td>
+                    <td>
+                        <a th:href="@{/employee/track(code=${p.trackingCode})}" class="btn btn-sm btn-outline-primary">Преглед</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div th:if="${parcel != null and allowed}" class="card mb-4">
         <div class="card-header"><i class="bi bi-box-seam"></i> Пратка <span th:text="${parcel.trackingCode}"></span></div>
         <div class="card-body">
             <table class="table table-borderless">
@@ -43,13 +77,83 @@
                 <tr th:if="${parcel.deliveredAt != null}"><th>Доставка/взимане от офис (дата/час)</th><td th:text="${#temporals.format(parcel.deliveredAt, 'dd.MM.yyyy HH:mm')}">-</td></tr>
                 <tr th:if="${parcel.paidAt != null}"><th>Плащане (дата/час)</th><td th:text="${#temporals.format(parcel.paidAt, 'dd.MM.yyyy HH:mm')}">-</td></tr>
             </table>
+
+            <div class="mt-3 pt-3 border-top">
+                <span th:if="${parcel.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).AT_OFFICE and parcel.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).DELIVERED}">
+                    <form class="d-inline track-action-form" th:action="@{/employee/parcels/{id}/arrived-at-office(id=${parcel.id})}" method="post"
+                          th:attr="data-tracking-code=${parcel.trackingCode}">
+                        <input type="hidden" name="returnTo" value="track" />
+                        <input type="hidden" name="trackingCode" th:value="${parcel.trackingCode}" />
+                        <button type="submit" class="btn btn-outline-primary btn-sm"><i class="bi bi-building-check me-1"></i>Приета в офис</button>
+                    </form>
+                </span>
+                <span th:if="${parcel.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).DELIVERED}">
+                    <form class="d-inline track-action-form track-receive-form" th:action="@{/employee/parcels/{id}/receive(id=${parcel.id})}" method="post"
+                          th:attr="data-tracking-code=${parcel.trackingCode}">
+                        <input type="hidden" name="returnTo" value="track" />
+                        <input type="hidden" name="trackingCode" th:value="${parcel.trackingCode}" />
+                        <input type="hidden" class="form-recipient-pays" th:value="${parcel.paymentType == T(com.nbu.CSCB532.model.logistics.PaymentType).RECIPIENT_PAYS}" />
+                        <input type="hidden" class="form-amount" th:value="${parcel.price != null ? parcel.price : 0}" />
+                        <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-circle me-1"></i>Получена</button>
+                    </form>
+                </span>
+            </div>
         </div>
     </div>
 
     <div th:if="${parcel != null and !allowed}" class="alert alert-warning">
         <i class="bi bi-lock me-2"></i>Тази пратка не е от вашата фирма. Можете да проследявате само пратки, свързани с вашата компания.
     </div>
+
+    <div class="modal fade" id="paymentConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Потвърждение на плащане</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Сума за плащане: <strong id="paymentConfirmAmount">0.00</strong> лв.</p>
+                    <p class="small text-muted mt-2 mb-0">При потвърждение пратката ще бъде маркирана като получена и платена.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отказ</button>
+                    <button type="button" class="btn btn-primary" id="paymentConfirmBtn"><i class="bi bi-check-lg me-1"></i> Потвърди</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <div th:replace="~{footer :: footer}"></div>
+<script th:inline="javascript">
+(function() {
+    var modal = document.getElementById('paymentConfirmModal');
+    var amountEl = document.getElementById('paymentConfirmAmount');
+    var confirmBtn = document.getElementById('paymentConfirmBtn');
+    var formToSubmit = null;
+    if (modal && amountEl && confirmBtn) {
+        document.querySelectorAll('form.track-receive-form').forEach(function(f) {
+            f.addEventListener('submit', function(e) {
+                var rp = f.querySelector('input.form-recipient-pays');
+                if (rp && rp.value === 'true') {
+                    e.preventDefault();
+                    var amt = f.querySelector('input.form-amount');
+                    amountEl.textContent = amt ? amt.value : '0';
+                    formToSubmit = f;
+                    new bootstrap.Modal(modal).show();
+                }
+            });
+        });
+        confirmBtn.addEventListener('click', function() {
+            if (formToSubmit) {
+                formToSubmit.submit();
+                formToSubmit = null;
+            }
+            var inst = bootstrap.Modal.getInstance(modal);
+            if (inst) inst.hide();
+        });
+    }
+})();
+</script>
 </body>
 </html>

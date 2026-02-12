@@ -62,6 +62,17 @@ public class ParcelService {
         return parcelRepository.findByTrackingCode(code);
     }
 
+    /** Търсене по име на клиент: подател (първо/фамилия) или получател. */
+    public List<Parcel> findByClientName(String name) {
+        if (name == null || name.isBlank()) return List.of();
+        String search = name.trim();
+        var byRecipient = parcelRepository.findByRecipientNameContainingIgnoreCase(search);
+        var bySender = parcelRepository.findBySenderNameContainingIgnoreCase(search);
+        return java.util.stream.Stream.concat(byRecipient.stream(), bySender.stream())
+                .distinct()
+                .toList();
+    }
+
     public Parcel save(Parcel parcel) {
         if (parcel.getTrackingCode() == null || parcel.getTrackingCode().isBlank()) {
             parcel.setTrackingCode(generateTrackingCode());

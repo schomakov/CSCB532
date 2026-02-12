@@ -107,6 +107,38 @@
             </div>
         </div>
         <div class="col-md-5">
+            <div class="card mb-2">
+                <div class="card-header"><i class="bi bi-funnel"></i> Филтър</div>
+                <div class="card-body py-2">
+                    <form method="get" action="#" th:action="@{/employee/parcels}" id="filterForm">
+                        <div class="mb-2">
+                            <label class="form-label small">Покажи</label>
+                            <select class="form-select form-select-sm" name="filter" id="parcelFilter">
+                                <option value="all" th:selected="${filter == 'all'}">Всички регистрирани пратки</option>
+                                <option value="byEmployee" th:selected="${filter == 'byEmployee'}">Регистрирани от служител</option>
+                                <option value="notReceived" th:selected="${filter == 'notReceived'}">Изпратени, но неполучени</option>
+                                <option value="bySender" th:selected="${filter == 'bySender'}">Изпратени от клиент</option>
+                                <option value="byRecipient" th:selected="${filter == 'byRecipient'}">Получени от клиент</option>
+                            </select>
+                        </div>
+                        <div class="mb-2" id="filterEmployeeBlock" style="display:none;">
+                            <label class="form-label small">Служител</label>
+                            <select class="form-select form-select-sm" name="employeeId" id="filterEmployeeId">
+                                <option value="">-- изберете --</option>
+                                <option th:each="e : ${employees}" th:value="${e.id}" th:text="${e.user != null ? (e.user.firstName + ' ' + e.user.lastName) : ('ID ' + e.id)}" th:selected="${filterEmployeeId != null and filterEmployeeId == e.id}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-2" id="filterClientBlock" style="display:none;">
+                            <label class="form-label small">Клиент</label>
+                            <select class="form-select form-select-sm" name="clientId" id="filterClientId">
+                                <option value="">-- изберете --</option>
+                                <option th:each="c : ${clients}" th:value="${c.id}" th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}" th:selected="${filterClientId != null and filterClientId == c.id}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="bi bi-search me-1"></i> Покажи</button>
+                    </form>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-header"><i class="bi bi-list-ul"></i> Пратки</div>
                 <div class="card-body">
@@ -185,6 +217,23 @@
     const recipientPhoneInput = document.querySelector('input[name*="recipientPhone"]');
     const weightKg = document.getElementById('weightKg');
     const priceInput = document.getElementById('priceInput');
+
+    var parcelFilter = document.getElementById('parcelFilter');
+    var filterEmployeeBlock = document.getElementById('filterEmployeeBlock');
+    var filterClientBlock = document.getElementById('filterClientBlock');
+    var filterEmployeeId = document.getElementById('filterEmployeeId');
+    var filterClientId = document.getElementById('filterClientId');
+    function updateFilterBlocks() {
+        var v = parcelFilter ? parcelFilter.value : 'all';
+        if (filterEmployeeBlock) filterEmployeeBlock.style.display = (v === 'byEmployee') ? 'block' : 'none';
+        if (filterClientBlock) filterClientBlock.style.display = (v === 'bySender' || v === 'byRecipient') ? 'block' : 'none';
+        if (filterEmployeeId && v !== 'byEmployee') filterEmployeeId.removeAttribute('required'); else if (filterEmployeeId && v === 'byEmployee') filterEmployeeId.setAttribute('required', 'required');
+        if (filterClientId && v !== 'bySender' && v !== 'byRecipient') filterClientId.removeAttribute('required'); else if (filterClientId && (v === 'bySender' || v === 'byRecipient')) filterClientId.setAttribute('required', 'required');
+    }
+    if (parcelFilter) {
+        parcelFilter.addEventListener('change', updateFilterBlocks);
+        updateFilterBlocks();
+    }
 
     var priceBase = 5;
     function setDeliveryType(value) {

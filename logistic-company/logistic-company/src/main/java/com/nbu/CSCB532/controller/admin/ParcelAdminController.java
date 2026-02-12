@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/admin/parcels")
 @RequiredArgsConstructor
@@ -23,8 +25,15 @@ public class ParcelAdminController {
     private final OfficeService officeService;
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("parcels", parcelService.findAll());
+    public String list(
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) Long employeeId,
+            @RequestParam(required = false) Long clientId,
+            Model model) {
+        model.addAttribute("parcels", resolveParcelList(filter, employeeId, clientId));
+        model.addAttribute("filter", filter != null ? filter : "all");
+        model.addAttribute("filterEmployeeId", employeeId);
+        model.addAttribute("filterClientId", clientId);
         Parcel parcel = new Parcel();
         parcel.setDeliveryAddress(new Address());
         model.addAttribute("parcel", parcel);
@@ -35,6 +44,15 @@ public class ParcelAdminController {
         model.addAttribute("parcelStatuses", ParcelStatus.values());
         model.addAttribute("paymentTypes", PaymentType.values());
         return "admin/parcels";
+    }
+
+    private List<Parcel> resolveParcelList(String filter, Long employeeId, Long clientId) {
+        if (filter == null || "all".equals(filter)) return parcelService.findAll();
+        if ("byEmployee".equals(filter) && employeeId != null) return parcelService.findByRegisteredBy(employeeId);
+        if ("notReceived".equals(filter)) return parcelService.findNotReceived();
+        if ("bySender".equals(filter) && clientId != null) return parcelService.findBySender(clientId);
+        if ("byRecipient".equals(filter) && clientId != null) return parcelService.findReceivedByRecipient(clientId);
+        return parcelService.findAll();
     }
 
     @GetMapping("/{id}/edit")

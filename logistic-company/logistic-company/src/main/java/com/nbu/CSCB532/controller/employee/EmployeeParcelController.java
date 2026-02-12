@@ -36,16 +36,25 @@ public class EmployeeParcelController {
     private final EmployeeService employeeService;
     private final UserService userService;
 
-    /** По задание: всеки служител вижда всички пратки в системата. */
+    /** Списък пратки с филтри: всички, по служител, неполучени, по подател, по получател. */
     @GetMapping("/parcels")
-    public String listAndForm(Model model) {
+    public String listAndForm(
+            @RequestParam(required = false) String filter,
+            @RequestParam(required = false) Long employeeId,
+            @RequestParam(required = false) Long clientId,
+            Model model) {
         Employee currentEmployee = getCurrentEmployeeOrNull();
-
-        List<Parcel> parcels = parcelService.findAll();
         List<com.nbu.CSCB532.model.logistics.Office> offices = officeService.findAll();
         List<com.nbu.CSCB532.model.logistics.Client> clients = clientService.findAll();
+        List<com.nbu.CSCB532.model.logistics.Employee> employees = employeeService.findAll();
 
+        List<Parcel> parcels = resolveParcelList(filter, employeeId, clientId);
         model.addAttribute("parcels", parcels);
+        model.addAttribute("filter", filter != null ? filter : "all");
+        model.addAttribute("filterEmployeeId", employeeId);
+        model.addAttribute("filterClientId", clientId);
+        model.addAttribute("employees", employees);
+
         Parcel parcel = new Parcel();
         parcel.setDeliveryAddress(new Address());
         parcel.setPaymentType(PaymentType.SENDER_PAYS);
@@ -56,6 +65,15 @@ public class EmployeeParcelController {
         model.addAttribute("paymentTypes", PaymentType.values());
         model.addAttribute("currentEmployee", currentEmployee);
         return "employee/parcels";
+    }
+
+    private List<Parcel> resolveParcelList(String filter, Long employeeId, Long clientId) {
+        if (filter == null || "all".equals(filter)) return parcelService.findAll();
+        if ("byEmployee".equals(filter) && employeeId != null) return parcelService.findByRegisteredBy(employeeId);
+        if ("notReceived".equals(filter)) return parcelService.findNotReceived();
+        if ("bySender".equals(filter) && clientId != null) return parcelService.findBySender(clientId);
+        if ("byRecipient".equals(filter) && clientId != null) return parcelService.findReceivedByRecipient(clientId);
+        return parcelService.findAll();
     }
 
     @PostMapping("/parcels")
@@ -81,30 +99,47 @@ public class EmployeeParcelController {
     }
 
     @PostMapping("/parcels/{id}/receive")
-    public String markReceived(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (!canModifyParcel(id, redirectAttributes)) return "redirect:/employee/parcels";
+    public String markReceived(@PathVariable Long id,
+                               @RequestParam(required = false) String returnTo,
+                               @RequestParam(required = false) String trackingCode,
+                               RedirectAttributes redirectAttributes) {
+        if (!canModifyParcel(id, redirectAttributes)) return redirectAfterAction(returnTo, trackingCode);
         parcelService.findById(id).ifPresent(p -> {
             p.setStatus(ParcelStatus.DELIVERED);
             p.setDeliveredAt(java.time.Instant.now());
             parcelService.save(p);
         });
-        return "redirect:/employee/parcels";
+        return redirectAfterAction(returnTo, trackingCode);
     }
 
     @PostMapping("/parcels/{id}/arrived-at-office")
-    public String markArrivedAtOffice(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        if (!canModifyParcel(id, redirectAttributes)) return "redirect:/employee/parcels";
+    public String markArrivedAtOffice(@PathVariable Long id,
+                                      @RequestParam(required = false) String returnTo,
+                                      @RequestParam(required = false) String trackingCode,
+                                      RedirectAttributes redirectAttributes) {
+        if (!canModifyParcel(id, redirectAttributes)) return redirectAfterAction(returnTo, trackingCode);
         parcelService.findById(id).ifPresent(p -> {
             p.setStatus(ParcelStatus.AT_OFFICE);
             parcelService.save(p);
         });
+        return redirectAfterAction(returnTo, trackingCode);
+    }
+
+    private String redirectAfterAction(String returnTo, String trackingCode) {
+        if ("track".equals(returnTo) && trackingCode != null && !trackingCode.isBlank()) {
+            return "redirect:/employee/track?code=" + trackingCode;
+        }
         return "redirect:/employee/parcels";
     }
 
-    /** По задание: служителите виждат всички пратки – проследяването показва всяка пратка. */
+    /** Проследяване по код на пратка или по име на клиент (подател/получател). */
     @GetMapping("/track")
-    public String track(@RequestParam(required = false) String code, Model model) {
+    public String track(@RequestParam(required = false) String code,
+                        @RequestParam(required = false) String clientName,
+                        Model model) {
         model.addAttribute("code", code != null ? code : "");
+        model.addAttribute("clientName", clientName != null ? clientName : "");
+
         if (code != null && !code.isBlank()) {
             parcelService.findByTrackingCode(code.strip()).ifPresentOrElse(
                     parcel -> {
@@ -113,6 +148,19 @@ public class EmployeeParcelController {
                     },
                     () -> model.addAttribute("notFound", true)
             );
+            return "employee/track";
+        }
+
+        if (clientName != null && !clientName.isBlank()) {
+            List<Parcel> found = parcelService.findByClientName(clientName.strip());
+            if (found.isEmpty()) {
+                model.addAttribute("notFound", true);
+            } else if (found.size() == 1) {
+                model.addAttribute("parcel", found.get(0));
+                model.addAttribute("allowed", true);
+            } else {
+                model.addAttribute("parcelsByClientName", found);
+            }
         }
         return "employee/track";
     }

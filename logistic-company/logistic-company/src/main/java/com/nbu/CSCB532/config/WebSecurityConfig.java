@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     private final LogisticsAuthenticationProvider authenticationProvider;
+    private final LogisticsAuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     @Order(1)
@@ -32,7 +33,7 @@ public class WebSecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(login -> login.loginPage("/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(authenticationSuccessHandler)
                         .permitAll())
                 .logout(logout -> logout.logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")

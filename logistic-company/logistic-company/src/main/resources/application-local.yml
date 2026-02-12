@@ -1,4 +1,4 @@
-# Локален профил – H2 in-memory, без PostgreSQL
+# Локален профил – H2 файлова база (същият файл може да се отвори и от IntelliJ Database)
 server:
   port: 8091
 
@@ -15,7 +15,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
   datasource:
-    url: jdbc:h2:mem:logisticdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    # Един и същ път винаги – приложението записва тук; в IntelliJ Database ползвай същия URL
+    url: jdbc:h2:file:~/logistic-company-db/logisticdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;AUTO_SERVER=TRUE
     username: sa
     password:
     driver-class-name: org.h2.Driver
