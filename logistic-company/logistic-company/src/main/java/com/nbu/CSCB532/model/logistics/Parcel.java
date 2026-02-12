@@ -26,16 +26,14 @@ public class Parcel {
     @JoinColumn(name = "sender_id")
     private Client sender;
 
-    private String recipientName;
-    private String recipientPhone;
+    /** Получател – винаги чрез нормализиран контакт (име/телефон; опционално връзка с клиент). */
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "recipient_contact_id")
+    private RecipientContact recipientContact;
 
     /** Описание на съдържанието на пратката */
     @Column(length = 500)
     private String description;
-
-    @ManyToOne
-    @JoinColumn(name = "recipient_client_id")
-    private Client recipientClient; // optional, when recipient is a registered client
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -49,9 +47,10 @@ public class Parcel {
     @JoinColumn(name = "to_office_id")
     private Office toOffice; // for TO_OFFICE deliveries
 
+    /** Адрес за доставка (TO_ADDRESS): връзка към client_addresses. */
     @ManyToOne(cascade = {PERSIST, MERGE})
-    @JoinColumn(name = "delivery_address_id")
-    private Address deliveryAddress; // for TO_ADDRESS deliveries
+    @JoinColumn(name = "delivery_client_address_id")
+    private ClientAddress deliveryClientAddress;
 
     @ManyToOne
     @JoinColumn(name = "courier_id")
@@ -104,6 +103,26 @@ public class Parcel {
     @PreUpdate
     public void preUpdate() {
         updatedAt = Instant.now();
+    }
+
+    /** Удобство за показване: име на получател от контакта. */
+    public String getRecipientName() {
+        return recipientContact != null ? recipientContact.getName() : null;
+    }
+
+    /** Удобство за показване: телефон на получател от контакта. */
+    public String getRecipientPhone() {
+        return recipientContact != null ? recipientContact.getPhone() : null;
+    }
+
+    /** Удобство: получател като клиент (ако контактът е свързан с клиент). */
+    public Client getRecipientClient() {
+        return recipientContact != null ? recipientContact.getClient() : null;
+    }
+
+    /** Удобство за показване и валидации: адрес за доставка от client_address. */
+    public Address getDeliveryAddress() {
+        return deliveryClientAddress != null ? deliveryClientAddress.getAddress() : null;
     }
 }
 

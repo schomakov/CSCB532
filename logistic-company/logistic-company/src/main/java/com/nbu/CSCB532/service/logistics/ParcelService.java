@@ -23,6 +23,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ParcelService {
     private final ParcelRepository parcelRepository;
+    private final ClientService clientService;
+    private final OfficeService officeService;
+    private final EmployeeService employeeService;
 
     /** Базова такса до офис (лв.) */
     private static final BigDecimal BASE_FEE_TO_OFFICE = new BigDecimal("5.00");
@@ -39,9 +42,9 @@ public class ParcelService {
         boolean hasRecipient = recipientName != null && !recipientName.isBlank();
         boolean hasSender = senderName != null && !senderName.isBlank();
         if (!hasRecipient && !hasSender) return parcelRepository.findAll();
-        if (hasRecipient && !hasSender) return parcelRepository.findByRecipientNameContainingIgnoreCase(recipientName.trim());
+        if (hasRecipient && !hasSender) return parcelRepository.findByRecipientContact_NameContainingIgnoreCase(recipientName.trim());
         if (!hasRecipient && hasSender) return parcelRepository.findBySenderNameContainingIgnoreCase(senderName.trim());
-        List<Parcel> byRecipient = parcelRepository.findByRecipientNameContainingIgnoreCase(recipientName.trim());
+        List<Parcel> byRecipient = parcelRepository.findByRecipientContact_NameContainingIgnoreCase(recipientName.trim());
         String senderSearch = senderName.trim().toLowerCase();
         return byRecipient.stream()
                 .filter(p -> p.getSender() != null && p.getSender().getUser() != null
@@ -66,7 +69,7 @@ public class ParcelService {
     public List<Parcel> findByClientName(String name) {
         if (name == null || name.isBlank()) return List.of();
         String search = name.trim();
-        var byRecipient = parcelRepository.findByRecipientNameContainingIgnoreCase(search);
+        var byRecipient = parcelRepository.findByRecipientContact_NameContainingIgnoreCase(search);
         var bySender = parcelRepository.findBySenderNameContainingIgnoreCase(search);
         return java.util.stream.Stream.concat(byRecipient.stream(), bySender.stream())
                 .distinct()
@@ -74,6 +77,7 @@ public class ParcelService {
     }
 
     public Parcel save(Parcel parcel) {
+        resolveTransientReferences(parcel);
         if (parcel.getTrackingCode() == null || parcel.getTrackingCode().isBlank()) {
             parcel.setTrackingCode(generateTrackingCode());
         }
@@ -89,6 +93,25 @@ public class ParcelService {
             parcel.setPaidAt(parcel.getDeliveredAt() != null ? parcel.getDeliveredAt() : Instant.now());
         }
         return parcelRepository.save(parcel);
+    }
+
+    /** Зарежда управлявани entity от БД по id, за да не остават transient обекти от формата (от th:field="*{fromOffice.id}" и др.). */
+    private void resolveTransientReferences(Parcel parcel) {
+        if (parcel.getSender() != null && parcel.getSender().getId() != null) {
+            parcel.setSender(clientService.findById(parcel.getSender().getId()).orElse(null));
+        }
+        if (parcel.getFromOffice() != null && parcel.getFromOffice().getId() != null) {
+            parcel.setFromOffice(officeService.findById(parcel.getFromOffice().getId()).orElse(null));
+        }
+        if (parcel.getToOffice() != null && parcel.getToOffice().getId() != null) {
+            parcel.setToOffice(officeService.findById(parcel.getToOffice().getId()).orElse(null));
+        }
+        if (parcel.getCourier() != null && parcel.getCourier().getId() != null) {
+            parcel.setCourier(employeeService.findById(parcel.getCourier().getId()).orElse(null));
+        }
+        if (parcel.getRegisteredBy() != null && parcel.getRegisteredBy().getId() != null) {
+            parcel.setRegisteredBy(employeeService.findById(parcel.getRegisteredBy().getId()).orElse(null));
+        }
     }
 
     public void deleteById(Long id) {
@@ -111,11 +134,11 @@ public class ParcelService {
     }
 
     public List<Parcel> findByRecipient(Long clientId) {
-        return parcelRepository.findByRecipientClientId(clientId);
+        return parcelRepository.findByRecipientContact_ClientId(clientId);
     }
 
     public List<Parcel> findReceivedByRecipient(Long clientId) {
-        return parcelRepository.findByRecipientClientIdAndStatus(clientId, ParcelStatus.DELIVERED);
+        return parcelRepository.findByRecipientContact_ClientIdAndStatus(clientId, ParcelStatus.DELIVERED);
     }
 
     public List<Parcel> findNotReceived() {

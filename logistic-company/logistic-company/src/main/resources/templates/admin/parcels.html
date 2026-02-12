@@ -12,6 +12,8 @@
                 <div class="card-body">
                     <form th:action="@{/admin/parcels}" method="post" th:object="${parcel}">
                         <input type="hidden" th:field="*{id}" />
+                        <input type="hidden" name="recipientContactId" th:value="${parcel.recipientContact != null ? parcel.recipientContact.id : null}" />
+                        <input type="hidden" name="deliveryClientAddressId" th:value="${parcel.deliveryClientAddress != null ? parcel.deliveryClientAddress.id : null}" />
                         <div class="mb-2">
                             <label class="form-label">Подател (клиент)</label>
                             <select class="form-select" th:field="*{sender.id}" required>
@@ -19,23 +21,24 @@
                                         th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
                             </select>
                         </div>
+                        <div class="mb-2">
+                            <label class="form-label">Получател (клиент)</label>
+                            <select class="form-select" name="recipientClientId" id="recipientClientSelect">
+                                <option value="">-- Ръчно въвеждане --</option>
+                                <option th:each="c : ${clients}" th:value="${c.id}"
+                                        th:attr="data-name=${c.user != null ? (c.user.firstName + ' ' + c.user.lastName) : ''}, data-phone=${c.phone != null ? c.phone : ''}"
+                                        th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
+                            </select>
+                        </div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <label class="form-label">Получател - име</label>
-                                <input class="form-control" th:field="*{recipientName}" required />
+                                <input class="form-control" name="recipientName" id="recipientNameInput" th:value="${parcel.recipientName}" />
                             </div>
                             <div class="col-md-6 mb-2">
                                 <label class="form-label">Получател - телефон</label>
-                                <input class="form-control" th:field="*{recipientPhone}" required />
+                                <input class="form-control" name="recipientPhone" id="recipientPhoneInput" th:value="${parcel.recipientPhone}" />
                             </div>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Получател (клиент, по избор)</label>
-                            <select class="form-select" th:field="*{recipientClient.id}">
-                                <option value="">--</option>
-                                <option th:each="c : ${clients}" th:value="${c.id}"
-                                        th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
-                            </select>
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Тип доставка</label>
@@ -92,15 +95,15 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="border rounded p-3 mb-3">
+                        <div class="border rounded p-3 mb-3" id="adminAddressBlock">
                             <h6>Адрес за доставка (ако е до адрес)</h6>
                             <div class="row">
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" th:field="*{deliveryAddress.country}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" th:field="*{deliveryAddress.city}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" th:field="*{deliveryAddress.zipCode}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" th:field="*{deliveryAddress.street}" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" name="addrCountry" th:value="${parcel.deliveryAddress != null ? parcel.deliveryAddress.country : null}" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" name="addrCity" th:value="${parcel.deliveryAddress != null ? parcel.deliveryAddress.city : null}" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" name="addrZip" th:value="${parcel.deliveryAddress != null ? parcel.deliveryAddress.zipCode : null}" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" name="addrStreet" th:value="${parcel.deliveryAddress != null ? parcel.deliveryAddress.street : null}" /></div>
                             </div>
-                            <input class="form-control" placeholder="Детайли" th:field="*{deliveryAddress.details}" />
+                            <input class="form-control" placeholder="Детайли" name="addrDetails" th:value="${parcel.deliveryAddress != null ? parcel.deliveryAddress.details : null}" />
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Описание</label>

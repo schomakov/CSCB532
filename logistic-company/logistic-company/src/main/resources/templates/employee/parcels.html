@@ -19,24 +19,24 @@
                                         th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
                             </select>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-2">
-                                <label class="form-label">Получател - име</label>
-                                <input class="form-control" th:field="*{recipientName}" required />
-                            </div>
-                            <div class="col-md-6 mb-2">
-                                <label class="form-label">Получател - телефон</label>
-                                <input class="form-control" th:field="*{recipientPhone}" required />
-                            </div>
-                        </div>
                         <div class="mb-2">
-                            <label class="form-label">Получател (клиент, по избор)</label>
-                            <select class="form-select" id="recipientClientSelect" th:field="*{recipientClient.id}">
-                                <option value="">-- Ръчно въвеждане --</option>
+                            <label class="form-label">Получател (клиент)</label>
+                            <select class="form-select" name="recipientClientId" id="recipientClientSelect">
+                                <option value="">-- Ръчно въвеждане име и телефон --</option>
                                 <option th:each="c : ${clients}" th:value="${c.id}"
                                         th:attr="data-name=${c.user != null ? (c.user.firstName + ' ' + c.user.lastName) : ''}, data-phone=${c.phone != null ? c.phone : ''}"
                                         th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
                             </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Получател - име</label>
+                                <input class="form-control" name="recipientName" id="recipientNameInput" placeholder="задължително при ръчно въвеждане" />
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label">Получател - телефон</label>
+                                <input class="form-control" name="recipientPhone" id="recipientPhoneInput" placeholder="при ръчно въвеждане" />
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Тип доставка</label>
@@ -70,12 +70,12 @@
                         <div class="border rounded p-3 mb-3 bg-light" id="addressBlock">
                             <h6 class="text-muted"><i class="bi bi-geo-alt"></i> Адрес за доставка</h6>
                             <div class="row">
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" th:field="*{deliveryAddress.country}" id="addrCountry" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" th:field="*{deliveryAddress.city}" id="addrCity" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" th:field="*{deliveryAddress.zipCode}" id="addrZip" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" th:field="*{deliveryAddress.street}" id="addrStreet" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" name="addrCountry" id="addrCountry" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" name="addrCity" id="addrCity" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" name="addrZip" id="addrZip" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" name="addrStreet" id="addrStreet" /></div>
                             </div>
-                            <input class="form-control" placeholder="Детайли" th:field="*{deliveryAddress.details}" id="addrDetails" />
+                            <input class="form-control" placeholder="Детайли" name="addrDetails" id="addrDetails" />
                         </div>
 
                         <div class="mb-2">

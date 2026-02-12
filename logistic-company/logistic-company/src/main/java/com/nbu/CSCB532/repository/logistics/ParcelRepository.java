@@ -14,7 +14,7 @@ import java.time.Instant;
 public interface ParcelRepository extends JpaRepository<Parcel, Long> {
     Optional<Parcel> findByTrackingCode(String trackingCode);
 
-    List<Parcel> findByRecipientNameContainingIgnoreCase(String recipientName);
+    List<Parcel> findByRecipientContact_NameContainingIgnoreCase(String name);
 
     @Query("SELECT DISTINCT p FROM Parcel p JOIN p.sender s JOIN s.user u WHERE LOWER(CONCAT(COALESCE(u.firstName,''), ' ', COALESCE(u.lastName,''))) LIKE LOWER(CONCAT('%', :senderName, '%'))")
     List<Parcel> findBySenderNameContainingIgnoreCase(@Param("senderName") String senderName);
@@ -24,10 +24,10 @@ public interface ParcelRepository extends JpaRepository<Parcel, Long> {
     List<Parcel> findByCourierIdAndStatusNotIn(Long courierId, List<ParcelStatus> statuses);
     List<Parcel> findBySenderId(Long senderId);
     List<Parcel> findByRegisteredById(Long employeeId);
-    List<Parcel> findByRecipientClientId(Long clientId);
+    List<Parcel> findByRecipientContact_ClientId(Long clientId);
     List<Parcel> findByStatusNotIn(List<ParcelStatus> statuses);
     List<Parcel> findByDeliveredAtBetweenAndStatus(Instant from, Instant to, ParcelStatus status);
-    List<Parcel> findByRecipientClientIdAndStatus(Long clientId, ParcelStatus status);
+    List<Parcel> findByRecipientContact_ClientIdAndStatus(Long clientId, ParcelStatus status);
     /** Пратки с плащане в периода (по дата на плащане) – за калкулиране на приходи. */
     List<Parcel> findByPaidAtNotNullAndPaidAtBetween(Instant from, Instant to);
 }
