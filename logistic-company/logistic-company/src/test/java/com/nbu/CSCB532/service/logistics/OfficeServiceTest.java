@@ -48,13 +48,6 @@ class OfficeServiceTest {
     }
 
     @Test
-    void findByCompany_returnsOfficesOfCompany() {
-        when(officeRepository.findByCompanyId(1L)).thenReturn(List.of(office));
-        List<Office> result = officeService.findByCompany(1L);
-        assertThat(result).hasSize(1).containsExactly(office);
-    }
-
-    @Test
     void save_persistsOffice() {
         when(officeRepository.save(any(Office.class))).thenReturn(office);
         Office saved = officeService.save(office);

@@ -1,5 +1,6 @@
 package com.nbu.CSCB532.global;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -21,7 +22,18 @@ public class AccessControlConfig {
         return hasRole("CLIENT");
     }
 
+    /** True ако потребителят е логнат (не е анонимен). */
+    public static boolean isAuthenticated() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.isAuthenticated()
+                && auth.getPrincipal() != null
+                && !"anonymousUser".equals(auth.getPrincipal().toString());
+    }
+
     public static String getUsername() {
+        if (!isAuthenticated()) {
+            return null;
+        }
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 

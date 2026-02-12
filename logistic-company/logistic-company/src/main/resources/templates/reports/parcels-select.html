@@ -4,10 +4,10 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Справки: Пратки по критерий</h2>
+    <h2 class="page-title"><i class="bi bi-funnel"></i> Справки: Пратки по критерий</h2>
 
     <div class="card mb-4">
-        <div class="card-header">Пратки по служител (регистрирани от)</div>
+        <div class="card-header"><i class="bi bi-person-badge"></i> Пратки по служител (регистрирани от)</div>
         <div class="card-body">
             <form method="get" th:action="@{/reports/parcels/by-employee}" class="row g-3 align-items-end">
                 <div class="col-md-8">
@@ -18,14 +18,14 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Покажи пратки</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">Пратки по подател (изпратени от клиент)</div>
+        <div class="card-header"><i class="bi bi-send"></i> Пратки по подател (изпратени от клиент)</div>
         <div class="card-body">
             <form method="get" th:action="@{/reports/parcels/by-sender}" class="row g-3 align-items-end">
                 <div class="col-md-8">
@@ -36,14 +36,14 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Покажи пратки</button>
                 </div>
             </form>
         </div>
     </div>
 
     <div class="card mb-4">
-        <div class="card-header">Пратки по получател (получени от клиент)</div>
+        <div class="card-header"><i class="bi bi-inbox"></i> Пратки по получател (получени от клиент)</div>
         <div class="card-body">
             <form method="get" th:action="@{/reports/parcels/by-recipient}" class="row g-3 align-items-end">
                 <div class="col-md-8">
@@ -54,7 +54,7 @@
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary">Покажи пратки</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Покажи пратки</button>
                 </div>
             </form>
         </div>

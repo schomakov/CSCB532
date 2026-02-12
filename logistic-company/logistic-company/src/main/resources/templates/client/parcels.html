@@ -4,13 +4,13 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Моите пратки</h2>
-    <div th:if="${warning}" class="alert alert-warning" th:text="${warning}"></div>
+    <h2 class="page-title"><i class="bi bi-box-seam"></i> Моите пратки</h2>
+    <div th:if="${warning}" class="alert alert-warning d-flex align-items-center gap-2"><i class="bi bi-exclamation-triangle"></i><span th:text="${warning}"></span></div>
 
     <div class="row">
         <div class="col-md-12">
             <div class="card mb-3">
-                <div class="card-header">Изпратени от мен</div>
+                <div class="card-header"><i class="bi bi-send"></i> Изпратени от мен</div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -40,7 +40,7 @@
             </div>
 
             <div class="card">
-                <div class="card-header">Получени от мен</div>
+                <div class="card-header"><i class="bi bi-inbox"></i> Получени от мен</div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-striped">

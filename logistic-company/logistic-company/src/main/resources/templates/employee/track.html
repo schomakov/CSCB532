@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="bg" xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: head}"></div>
+<body class="d-flex flex-column min-vh-100">
+<div th:replace="~{header :: header}"></div>
+<main class="container mt-4">
+    <h2 class="page-title"><i class="bi bi-geo-alt"></i> Проследяване на пратка</h2>
+
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-search"></i> Въведете код за проследяване</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/employee/track}" class="row g-2 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label">Код на пратка</label>
+                    <input type="text" name="code" class="form-control" th:value="${code}" placeholder="напр. TRK-REG001" />
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Проследи</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div th:if="${notFound}" class="alert alert-warning">
+        <i class="bi bi-exclamation-triangle me-2"></i>Не е намерена пратка с този код.
+    </div>
+
+    <div th:if="${parcel != null and allowed}" class="card">
+        <div class="card-header"><i class="bi bi-box-seam"></i> Пратка <span th:text="${parcel.trackingCode}"></span></div>
+        <div class="card-body">
+            <table class="table table-borderless">
+                <tr><th style="width:12rem;">Статус</th><td><span th:text="${parcel.status}"></span></td></tr>
+                <tr><th>Подател</th><td th:text="${parcel.sender != null and parcel.sender.user != null ? (parcel.sender.user.firstName + ' ' + parcel.sender.user.lastName) : '-'}">-</td></tr>
+                <tr><th>Получател (име)</th><td th:text="${parcel.recipientName}">-</td></tr>
+                <tr><th>Телефон получател</th><td th:text="${parcel.recipientPhone}">-</td></tr>
+                <tr><th>Тип доставка</th><td th:text="${parcel.deliveryType}">-</td></tr>
+                <tr><th>Тегло (кг)</th><td th:text="${parcel.weightKg}">-</td></tr>
+                <tr><th>Цена</th><td th:text="${parcel.price != null ? parcel.price + ' лв.' : '-'}">-</td></tr>
+                <tr><th>Плащане</th><td th:text="${parcel.paymentType != null ? (parcel.paymentType == T(com.nbu.CSCB532.model.logistics.PaymentType).SENDER_PAYS ? 'Подател при изпращане' : 'Получател при доставка') : '-'}">-</td></tr>
+                <tr><th>Регистрирана в офис</th><td th:text="${parcel.fromOffice != null ? parcel.fromOffice.name : '-'}">-</td></tr>
+                <tr th:if="${parcel.createdAt != null}"><th>Регистрация (дата/час)</th><td th:text="${#temporals.format(parcel.createdAt, 'dd.MM.yyyy HH:mm')}">-</td></tr>
+                <tr th:if="${parcel.deliveryType == T(com.nbu.CSCB532.model.logistics.DeliveryType).TO_OFFICE}"><th>До офис</th><td th:text="${parcel.toOffice != null ? parcel.toOffice.name : '-'}">-</td></tr>
+                <tr th:if="${parcel.deliveredAt != null}"><th>Доставка/взимане от офис (дата/час)</th><td th:text="${#temporals.format(parcel.deliveredAt, 'dd.MM.yyyy HH:mm')}">-</td></tr>
+                <tr th:if="${parcel.paidAt != null}"><th>Плащане (дата/час)</th><td th:text="${#temporals.format(parcel.paidAt, 'dd.MM.yyyy HH:mm')}">-</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div th:if="${parcel != null and !allowed}" class="alert alert-warning">
+        <i class="bi bi-lock me-2"></i>Тази пратка не е от вашата фирма. Можете да проследявате само пратки, свързани с вашата компания.
+    </div>
+</main>
+<div th:replace="~{footer :: footer}"></div>
+</body>
+</html>

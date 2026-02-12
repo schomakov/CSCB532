@@ -4,11 +4,12 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Служител: Пратки</h2>
+    <h2 class="page-title"><i class="bi bi-box-seam"></i> Служител: Пратки</h2>
     <div class="row">
         <div class="col-md-7">
-            <div class="card mb-3">
-                <div class="card-header">Регистрирай изпратена пратка</div>
+            <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
+        <div class="card mb-3">
+                <div class="card-header"><i class="bi bi-plus-square"></i> Регистрирай изпратена пратка</div>
                 <div class="card-body">
                     <form th:action="@{/employee/parcels}" method="post" th:object="${parcel}">
                         <div class="mb-2">
@@ -30,17 +31,22 @@
                         </div>
                         <div class="mb-2">
                             <label class="form-label">Получател (клиент, по избор)</label>
-                            <select class="form-select" th:field="*{recipientClient.id}">
-                                <option value="">--</option>
+                            <select class="form-select" id="recipientClientSelect" th:field="*{recipientClient.id}">
+                                <option value="">-- Ръчно въвеждане --</option>
                                 <option th:each="c : ${clients}" th:value="${c.id}"
+                                        th:attr="data-name=${c.user != null ? (c.user.firstName + ' ' + c.user.lastName) : ''}, data-phone=${c.phone != null ? c.phone : ''}"
                                         th:text="${c.user != null ? (c.user.username + ' - ' + c.user.firstName + ' ' + c.user.lastName) : c.id}"></option>
                             </select>
                         </div>
-                        <div class="mb-2">
+                        <div class="mb-3">
                             <label class="form-label">Тип доставка</label>
-                            <select class="form-select" th:field="*{deliveryType}" required>
-                                <option th:each="t : ${deliveryTypes}" th:value="${t}" th:text="${t}"></option>
-                            </select>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="deliveryTypeToggle" id="deliveryToOffice" value="TO_OFFICE" th:checked="${parcel.deliveryType == T(com.nbu.CSCB532.model.logistics.DeliveryType).TO_OFFICE}" autocomplete="off" />
+                                <label class="btn btn-outline-primary" for="deliveryToOffice"><i class="bi bi-building me-1"></i> До офис</label>
+                                <input type="radio" class="btn-check" name="deliveryTypeToggle" id="deliveryToAddress" value="TO_ADDRESS" th:checked="${parcel.deliveryType == T(com.nbu.CSCB532.model.logistics.DeliveryType).TO_ADDRESS}" autocomplete="off" />
+                                <label class="btn btn-outline-primary" for="deliveryToAddress"><i class="bi bi-geo-alt me-1"></i> До адрес</label>
+                            </div>
+                            <input type="hidden" th:field="*{deliveryType}" id="deliveryTypeValue" />
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-2">
@@ -52,45 +58,57 @@
                                             th:text="${o.name}"></option>
                                 </select>
                             </div>
-                            <div class="col-md-6 mb-2" th:if="${parcel.deliveryType == T(com.nbu.CSCB532.model.logistics.DeliveryType).TO_OFFICE}">
+                            <div class="col-md-6 mb-2" id="toOfficeBlock">
                                 <label class="form-label">До офис</label>
-                                <select class="form-select" th:field="*{toOffice.id}">
-                                    <option value="">--</option>
+                                <select class="form-select" id="toOfficeSelect" th:field="*{toOffice.id}">
+                                    <option value="">-- Изберете офис --</option>
                                     <option th:each="o : ${offices}" th:value="${o.id}" th:text="${o.name}"></option>
                                 </select>
                             </div>
                         </div>
 
-                        <div class="border rounded p-3 mb-3">
-                            <h6>Адрес за доставка (ако е до адрес)</h6>
+                        <div class="border rounded p-3 mb-3 bg-light" id="addressBlock">
+                            <h6 class="text-muted"><i class="bi bi-geo-alt"></i> Адрес за доставка</h6>
                             <div class="row">
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" th:field="*{deliveryAddress.country}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" th:field="*{deliveryAddress.city}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" th:field="*{deliveryAddress.zipCode}" /></div>
-                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" th:field="*{deliveryAddress.street}" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Държава" th:field="*{deliveryAddress.country}" id="addrCountry" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Град" th:field="*{deliveryAddress.city}" id="addrCity" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Пощ. код" th:field="*{deliveryAddress.zipCode}" id="addrZip" /></div>
+                                <div class="col-md-3 mb-2"><input class="form-control" placeholder="Улица" th:field="*{deliveryAddress.street}" id="addrStreet" /></div>
                             </div>
-                            <input class="form-control" placeholder="Детайли" th:field="*{deliveryAddress.details}" />
+                            <input class="form-control" placeholder="Детайли" th:field="*{deliveryAddress.details}" id="addrDetails" />
+                        </div>
+
+                        <div class="mb-2">
+                            <label class="form-label">Описание на пратката</label>
+                            <input class="form-control" th:field="*{description}" placeholder="напр. документи, книги, електроника" maxlength="500" />
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-2">
                                 <label class="form-label">Тегло (кг)</label>
-                                <input type="number" step="0.01" min="0" class="form-control" th:field="*{weightKg}" required />
+                                <input type="number" step="0.01" min="0" class="form-control" id="weightKg" th:field="*{weightKg}" required />
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label class="form-label">Цена</label>
-                                <input type="number" step="0.01" min="0" class="form-control" th:field="*{price}" placeholder="авто" />
+                                <label class="form-label">Плащане</label>
+                                <select class="form-select" th:field="*{paymentType}">
+                                    <option th:each="pt : ${paymentTypes}" th:value="${pt}" th:text="${pt == T(com.nbu.CSCB532.model.logistics.PaymentType).SENDER_PAYS ? 'Подател при изпращане' : 'Получател при предаване/доставка'}">-</option>
+                                </select>
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Цена (лв.)</label>
+                            <input type="number" step="0.01" min="0" class="form-control" id="priceInput" th:field="*{price}" readonly placeholder="5 + 4×тегло" title="До офис: 5 + 4×тегло; до адрес: 7.50 + 4×тегло (кг)" />
+                            <div class="form-text" id="priceFormulaText">Изчислява се: 5 + 4×тегло (до офис)</div>
+                        </div>
 
-                        <button type="submit" class="btn btn-primary">Регистрирай</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Регистрирай</button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="col-md-5">
             <div class="card">
-                <div class="card-header">Пратки</div>
+                <div class="card-header"><i class="bi bi-list-ul"></i> Пратки</div>
                 <div class="card-body">
                     <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
                         <table class="table table-striped">
@@ -98,6 +116,8 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Код</th>
+                                <th>Тегло</th>
+                                <th>Плащане</th>
                                 <th>Статус</th>
                                 <th></th>
                             </tr>
@@ -106,15 +126,19 @@
                             <tr th:each="p : ${parcels}">
                                 <td th:text="${p.id}">1</td>
                                 <td th:text="${p.trackingCode}">TRK-XXXX</td>
+                                <td th:text="${p.weightKg != null ? p.weightKg + ' кг' : '-'}">-</td>
+                                <td th:text="${p.paymentType != null ? (p.paymentType == T(com.nbu.CSCB532.model.logistics.PaymentType).SENDER_PAYS ? 'Подател' : 'При доставка') : '-'}">-</td>
                                 <td th:text="${p.status}">REGISTERED</td>
                                 <td class="text-end">
                                     <form th:action="@{/employee/parcels/{id}/arrived-at-office(id=${p.id})}" method="post" style="display:inline"
                                       th:if="${p.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).AT_OFFICE and p.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).DELIVERED}">
                                         <button class="btn btn-sm btn-outline-secondary">Приета в офис</button>
                                     </form>
-                                    <form th:action="@{/employee/parcels/{id}/receive(id=${p.id})}" method="post" style="display:inline"
+                                    <form class="employee-receive-form" th:action="@{/employee/parcels/{id}/receive(id=${p.id})}" method="post" style="display:inline"
                                           th:if="${p.status != T(com.nbu.CSCB532.model.logistics.ParcelStatus).DELIVERED}">
-                                        <button class="btn btn-sm btn-outline-success">Получена</button>
+                                        <input type="hidden" class="form-recipient-pays" th:value="${p.paymentType == T(com.nbu.CSCB532.model.logistics.PaymentType).RECIPIENT_PAYS}" />
+                                        <input type="hidden" class="form-amount" th:value="${p.price != null ? p.price : 0}" />
+                                        <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check-circle me-1"></i>Получена</button>
                                     </form>
                                 </td>
                             </tr>
@@ -125,7 +149,134 @@
             </div>
         </div>
     </div>
+
+    <!-- Модал за потвърждение на плащане при получаване -->
+    <div class="modal fade" id="paymentConfirmModal" tabindex="-1" aria-labelledby="paymentConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentConfirmModalLabel">Потвърждение на плащане</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Сума за плащане: <strong id="paymentConfirmAmount">0.00</strong> лв.</p>
+                    <p class="small text-muted mt-2 mb-0">При потвърждение пратката ще бъде маркирана като получена и платена.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отказ</button>
+                    <button type="button" class="btn btn-primary" id="paymentConfirmBtn"><i class="bi bi-check-lg me-1"></i> Потвърди</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <div th:replace="~{footer :: footer}"></div>
+<script th:inline="javascript">
+(function() {
+    const deliveryToOffice = document.getElementById('deliveryToOffice');
+    const deliveryToAddress = document.getElementById('deliveryToAddress');
+    const deliveryTypeValue = document.getElementById('deliveryTypeValue');
+    const toOfficeBlock = document.getElementById('toOfficeBlock');
+    const toOfficeSelect = document.getElementById('toOfficeSelect');
+    const addressBlock = document.getElementById('addressBlock');
+    const addressInputs = addressBlock ? addressBlock.querySelectorAll('input') : [];
+    const recipientClientSelect = document.getElementById('recipientClientSelect');
+    const recipientNameInput = document.querySelector('input[name*="recipientName"]');
+    const recipientPhoneInput = document.querySelector('input[name*="recipientPhone"]');
+    const weightKg = document.getElementById('weightKg');
+    const priceInput = document.getElementById('priceInput');
+
+    var priceBase = 5;
+    function setDeliveryType(value) {
+        if (deliveryTypeValue) deliveryTypeValue.value = value;
+        priceBase = value === 'TO_ADDRESS' ? 7.5 : 5;
+        const isToOffice = value === 'TO_OFFICE';
+        if (toOfficeBlock && toOfficeSelect) {
+            toOfficeBlock.classList.toggle('pe-none', !isToOffice);
+            toOfficeSelect.disabled = !isToOffice;
+            toOfficeSelect.required = isToOffice;
+            if (!isToOffice) toOfficeSelect.value = '';
+        }
+        if (addressBlock) {
+            addressBlock.classList.toggle('pe-none', isToOffice);
+            addressBlock.querySelectorAll('input').forEach(function(inp) { inp.disabled = isToOffice; });
+        }
+        updatePriceFormula();
+        if (typeof updatePrice === 'function') updatePrice();
+    }
+    function updatePriceFormula() {
+        const formulaText = document.getElementById('priceFormulaText');
+        if (formulaText) formulaText.textContent = 'Изчислява се: ' + priceBase + ' + 4×тегло (' + (priceBase === 5 ? 'до офис' : 'до адрес') + ')';
+        if (priceInput) {
+            priceInput.placeholder = priceBase + ' + 4×тегло';
+            priceInput.title = 'Изчислява се автоматично: ' + priceBase + ' + 4×тегло (кг)';
+        }
+    }
+
+    if (deliveryToOffice && deliveryToAddress && deliveryTypeValue) {
+        deliveryToOffice.addEventListener('change', function() { setDeliveryType('TO_OFFICE'); });
+        deliveryToAddress.addEventListener('change', function() { setDeliveryType('TO_ADDRESS'); });
+        var initial = (deliveryTypeValue.value || 'TO_OFFICE').toUpperCase();
+        if (initial === 'TO_OFFICE') deliveryToOffice.checked = true; else deliveryToAddress.checked = true;
+        setDeliveryType(initial);
+    } else {
+        updatePriceFormula();
+    }
+
+    if (recipientClientSelect && recipientNameInput && recipientPhoneInput) {
+        recipientClientSelect.addEventListener('change', function() {
+            const opt = this.options[this.selectedIndex];
+            if (opt && opt.value) {
+                recipientNameInput.value = opt.getAttribute('data-name') || '';
+                recipientPhoneInput.value = opt.getAttribute('data-phone') || '';
+            }
+        });
+    }
+
+    function updatePrice() {
+        if (!weightKg || !priceInput) return;
+        const w = parseFloat(weightKg.value);
+        if (!isNaN(w) && w >= 0) {
+            const base = (typeof priceBase !== 'undefined') ? priceBase : 5;
+            const price = (base + 4 * w).toFixed(2);
+            priceInput.value = price;
+        } else {
+            priceInput.value = '';
+        }
+    }
+    if (weightKg) {
+        weightKg.addEventListener('input', updatePrice);
+        weightKg.addEventListener('change', updatePrice);
+        updatePrice();
+    }
+
+    var paymentModal = document.getElementById('paymentConfirmModal');
+    var paymentAmountEl = document.getElementById('paymentConfirmAmount');
+    var paymentConfirmBtn = document.getElementById('paymentConfirmBtn');
+    var formToSubmit = null;
+    if (paymentModal && paymentAmountEl && paymentConfirmBtn) {
+        document.querySelectorAll('form.employee-receive-form').forEach(function(f) {
+            f.addEventListener('submit', function(e) {
+                var rp = f.querySelector('input.form-recipient-pays');
+                if (rp && rp.value === 'true') {
+                    e.preventDefault();
+                    var amt = f.querySelector('input.form-amount');
+                    paymentAmountEl.textContent = amt ? amt.value : '0';
+                    formToSubmit = f;
+                    new bootstrap.Modal(paymentModal).show();
+                }
+            });
+        });
+        paymentConfirmBtn.addEventListener('click', function() {
+            if (formToSubmit) {
+                formToSubmit.submit();
+                formToSubmit = null;
+            }
+            var inst = bootstrap.Modal.getInstance(paymentModal);
+            if (inst) inst.hide();
+        });
+    }
+})();
+</script>
 </body>
 </html>

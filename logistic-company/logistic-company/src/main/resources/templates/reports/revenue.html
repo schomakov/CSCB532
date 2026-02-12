@@ -4,23 +4,64 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Справка: Приходи</h2>
-    <form class="row g-3 mb-3" method="get" th:action="@{/reports/revenue}">
-        <div class="col-auto">
-            <label class="form-label">От дата</label>
-            <input type="date" class="form-control" name="from" th:value="${from}" required>
+    <h2 class="page-title"><i class="bi bi-currency-dollar"></i> Справка: Приходи</h2>
+
+    <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-calendar-range"></i> Избор на период</div>
+        <div class="card-body">
+            <form class="row g-3 align-items-end" method="get" th:action="@{/reports/revenue}">
+                <div class="col-auto">
+                    <label class="form-label">От дата</label>
+                    <input type="date" class="form-control" name="from" th:value="${from}" required>
+                </div>
+                <div class="col-auto">
+                    <label class="form-label">До дата</label>
+                    <input type="date" class="form-control" name="to" th:value="${to}" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Покажи</button>
+                </div>
+            </form>
         </div>
-        <div class="col-auto">
-            <label class="form-label">До дата</label>
-            <input type="date" class="form-control" name="to" th:value="${to}" required>
+    </div>
+
+    <div class="card mb-4" th:if="${revenue != null}">
+        <div class="card-header bg-success text-white"><i class="bi bi-cash-stack"></i> Приходи за периода</div>
+        <div class="card-body">
+            <p class="mb-1 text-muted small">Приходите се изчисляват по <strong>дата на плащане</strong>: сума от цените на пратки, платени в избрания период (подател при регистрация или получател при доставка/взимане от офис).</p>
+            <p class="mb-0 fs-5">Приходи за периода <strong th:text="${from}"></strong> – <strong th:text="${to}"></strong>: <strong th:text="${revenue}">0.00</strong> лв.</p>
         </div>
-        <div class="col-auto align-self-end">
-            <button class="btn btn-primary">Покажи</button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark"><i class="bi bi-clock-history"></i> Още неплатени пратки (получател плаща при доставка/предаване)</div>
+        <div class="card-body">
+            <p class="text-muted small mb-3">Това са пратки с тип плащане „Получател при предаване/доставка“, които още <strong>не са доставени</strong>. Сумата ще бъде събрана при доставка до адрес или при предаване в офис.</p>
+            <p class="fs-5 mb-3" th:if="${unpaidTotal != null}">Обща очаквана сума: <strong th:text="${unpaidTotal}">0.00</strong> лв. <span class="badge bg-secondary" th:text="${unpaidParcels != null ? unpaidParcels.size() : 0} + ' пратки'">0 пратки</span></p>
+            <div class="table-responsive" th:if="${unpaidParcels != null and !unpaidParcels.isEmpty()}">
+                <table class="table table-sm table-striped">
+                    <thead>
+                    <tr>
+                        <th>Код</th>
+                        <th>Получател</th>
+                        <th>Телефон</th>
+                        <th>Статус</th>
+                        <th>Цена (лв.)</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${unpaidParcels}">
+                        <td th:text="${p.trackingCode}">TRK-XXX</td>
+                        <td th:text="${p.recipientName}">-</td>
+                        <td th:text="${p.recipientPhone}">-</td>
+                        <td th:text="${p.status}">-</td>
+                        <td th:text="${p.price != null ? p.price : '-'}">-</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-muted small mb-0" th:if="${unpaidParcels == null or unpaidParcels.isEmpty()}">Няма неплатени пратки.</p>
         </div>
-    </form>
-    <div class="alert alert-info" th:if="${revenue != null}">
-        Приходи за периода <span th:text="${from}"></span> - <span th:text="${to}"></span>:
-        <strong th:text="${revenue}">0.00</strong> лв.
     </div>
 </main>
 <div th:replace="~{footer :: footer}"></div>

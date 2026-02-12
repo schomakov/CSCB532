@@ -4,6 +4,9 @@ import com.nbu.CSCB532.model.auth.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Entity
 @Table(name = "clients")
 @Data
@@ -21,14 +24,8 @@ public class Client {
 
     private String phone;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "default_address_country")),
-            @AttributeOverride(name = "city", column = @Column(name = "default_address_city")),
-            @AttributeOverride(name = "zipCode", column = @Column(name = "default_address_zip_code")),
-            @AttributeOverride(name = "street", column = @Column(name = "default_address_street")),
-            @AttributeOverride(name = "details", column = @Column(name = "default_address_details"))
-    })
+    @ManyToOne(cascade = {PERSIST, MERGE})
+    @JoinColumn(name = "default_address_id")
     private Address defaultAddress;
 }
 

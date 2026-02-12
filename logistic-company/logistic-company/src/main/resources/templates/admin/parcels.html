@@ -4,11 +4,11 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Пратки</h2>
+    <h2 class="page-title"><i class="bi bi-box-seam"></i> Пратки</h2>
     <div class="row">
         <div class="col-md-8">
             <div class="card mb-3">
-                <div class="card-header">Създай/Редактирай пратка</div>
+                <div class="card-header"><i class="bi bi-pencil-square"></i> Създай/Редактирай пратка</div>
                 <div class="card-body">
                     <form th:action="@{/admin/parcels}" method="post" th:object="${parcel}">
                         <input type="hidden" th:field="*{id}" />
@@ -69,12 +69,21 @@
                                 <input type="number" step="0.01" min="0" class="form-control" th:field="*{price}" placeholder="авто" />
                             </div>
                             <div class="col-md-3 mb-2">
+                                <label class="form-label">Плащане</label>
+                                <select class="form-select" th:field="*{paymentType}">
+                                    <option value="">--</option>
+                                    <option th:each="pt : ${paymentTypes}" th:value="${pt}" th:text="${pt == T(com.nbu.CSCB532.model.logistics.PaymentType).SENDER_PAYS ? 'Подател при изпращане' : 'Получател при доставка'}">-</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
                                 <label class="form-label">Статус</label>
                                 <select class="form-select" th:field="*{status}" required>
                                     <option th:each="s : ${parcelStatuses}" th:value="${s}" th:text="${s}"></option>
                                 </select>
                             </div>
-                            <div class="col-md-3 mb-2">
+                            <div class="col-md-6 mb-2">
                                 <label class="form-label">Куриер</label>
                                 <select class="form-select" th:field="*{courier.id}">
                                     <option value="">--</option>
@@ -94,17 +103,21 @@
                             <input class="form-control" placeholder="Детайли" th:field="*{deliveryAddress.details}" />
                         </div>
                         <div class="mb-2">
+                            <label class="form-label">Описание</label>
+                            <input class="form-control" th:field="*{description}" placeholder="съдържание на пратката" maxlength="500" />
+                        </div>
+                        <div class="mb-2">
                             <label class="form-label">Тракинг код</label>
                             <input class="form-control" th:field="*{trackingCode}" placeholder="авто" />
                         </div>
-                        <button type="submit" class="btn btn-primary">Запази</button>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Запази</button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Списък</div>
+                <div class="card-header"><i class="bi bi-list-ul"></i> Списък</div>
                 <div class="card-body">
                     <div class="table-responsive" style="max-height: 60vh; overflow-y: auto;">
                         <table class="table table-striped">
@@ -122,9 +135,9 @@
                                 <td th:text="${p.trackingCode}">TRK-XXXX</td>
                                 <td th:text="${p.status}">REGISTERED</td>
                                 <td class="text-end">
-                                    <a th:href="@{/admin/parcels/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-secondary">Редактирай</a>
+                                    <a th:href="@{/admin/parcels/{id}/edit(id=${p.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil me-1"></i>Редактирай</a>
                                     <form th:action="@{/admin/parcels/{id}/delete(id=${p.id})}" method="post" style="display:inline" onsubmit="return confirm('Изтриване?');">
-                                        <button class="btn btn-sm btn-outline-danger">Изтрий</button>
+                                        <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash me-1"></i>Изтрий</button>
                                     </form>
                                 </td>
                             </tr>

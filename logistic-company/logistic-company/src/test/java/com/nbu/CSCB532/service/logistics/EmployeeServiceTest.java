@@ -49,13 +49,6 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void findByCompany_returnsEmployeesOfCompany() {
-        when(employeeRepository.findByCompanyId(1L)).thenReturn(List.of(employee));
-        List<Employee> result = employeeService.findByCompany(1L);
-        assertThat(result).hasSize(1).containsExactly(employee);
-    }
-
-    @Test
     void findByType_returnsEmployeesOfType() {
         when(employeeRepository.findByType(EmployeeType.COURIER)).thenReturn(List.of(employee));
         List<Employee> result = employeeService.findByType(EmployeeType.COURIER);

@@ -18,6 +18,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,8 +79,8 @@ class ParcelServiceTest {
         parcelService.save(parcel);
         ArgumentCaptor<Parcel> captor = ArgumentCaptor.forClass(Parcel.class);
         verify(parcelRepository).save(captor.capture());
-        // BASE_FEE 5 + 2*1.5 = 8.00
-        assertThat(captor.getValue().getPrice()).isEqualByComparingTo(new BigDecimal("8.00"));
+        // BASE_FEE_TO_OFFICE 5 + 4*weight = 5 + 8 = 13.00
+        assertThat(captor.getValue().getPrice()).isEqualByComparingTo(new BigDecimal("13.00"));
     }
 
     @Test
@@ -91,8 +92,8 @@ class ParcelServiceTest {
         parcelService.save(parcel);
         ArgumentCaptor<Parcel> captor = ArgumentCaptor.forClass(Parcel.class);
         verify(parcelRepository).save(captor.capture());
-        // 5 + 1.5 + 3 = 9.50
-        assertThat(captor.getValue().getPrice()).isEqualByComparingTo(new BigDecimal("9.50"));
+        // BASE_FEE_TO_ADDRESS 7.50 + 4*weight = 7.50 + 4 = 11.50
+        assertThat(captor.getValue().getPrice()).isEqualByComparingTo(new BigDecimal("11.50"));
     }
 
     @Test
@@ -136,8 +137,61 @@ class ParcelServiceTest {
     }
 
     @Test
+    void sumPaidBetween_returnsSumOfPricesForPaidInPeriod() {
+        Parcel p1 = Parcel.builder().price(new BigDecimal("20.00")).build();
+        Parcel p2 = Parcel.builder().price(new BigDecimal("30.00")).build();
+        when(parcelRepository.findByPaidAtNotNullAndPaidAtBetween(any(Instant.class), any(Instant.class)))
+                .thenReturn(List.of(p1, p2));
+        BigDecimal sum = parcelService.sumPaidBetween(Instant.EPOCH, Instant.now());
+        assertThat(sum).isEqualByComparingTo(new BigDecimal("50.00"));
+    }
+
+    @Test
     void deleteById_callsRepository() {
         parcelService.deleteById(1L);
         verify(parcelRepository).deleteById(1L);
+    }
+
+    @Test
+    void findByTrackingCode_whenExists_returnsParcel() {
+        when(parcelRepository.findByTrackingCode("TRK-ABC12345")).thenReturn(Optional.of(parcel));
+        assertThat(parcelService.findByTrackingCode("TRK-ABC12345")).contains(parcel);
+    }
+
+    @Test
+    void findByTrackingCode_whenNotExists_returnsEmpty() {
+        when(parcelRepository.findByTrackingCode("TRK-UNKNOWN")).thenReturn(Optional.empty());
+        assertThat(parcelService.findByTrackingCode("TRK-UNKNOWN")).isEmpty();
+    }
+
+    @Test
+    void findToDeliverByCourier_returnsParcelsNotDeliveredOrCanceled() {
+        when(parcelRepository.findByCourierIdAndStatusNotIn(5L, List.of(ParcelStatus.DELIVERED, ParcelStatus.CANCELED)))
+                .thenReturn(List.of(parcel));
+        List<Parcel> result = parcelService.findToDeliverByCourier(5L);
+        assertThat(result).hasSize(1).containsExactly(parcel);
+    }
+
+    @Test
+    void findToDeliverByCourier_nullId_returnsEmpty() {
+        assertThat(parcelService.findToDeliverByCourier(null)).isEmpty();
+        verify(parcelRepository, never()).findByCourierIdAndStatusNotIn(any(), any());
+    }
+
+    @Test
+    void findUnpaidParcels_returnsRecipientPaysNotDelivered() {
+        when(parcelRepository.findByPaymentTypeAndStatusNotIn(PaymentType.RECIPIENT_PAYS,
+                List.of(ParcelStatus.DELIVERED, ParcelStatus.CANCELED))).thenReturn(List.of(parcel));
+        List<Parcel> result = parcelService.findUnpaidParcels();
+        assertThat(result).hasSize(1).containsExactly(parcel);
+    }
+
+    @Test
+    void sumUnpaidAmount_sumsPricesOfUnpaidParcels() {
+        Parcel p1 = Parcel.builder().price(new BigDecimal("10.00")).build();
+        Parcel p2 = Parcel.builder().price(new BigDecimal("15.00")).build();
+        when(parcelRepository.findByPaymentTypeAndStatusNotIn(PaymentType.RECIPIENT_PAYS,
+                List.of(ParcelStatus.DELIVERED, ParcelStatus.CANCELED))).thenReturn(List.of(p1, p2));
+        assertThat(parcelService.sumUnpaidAmount()).isEqualByComparingTo(new BigDecimal("25.00"));
     }
 }

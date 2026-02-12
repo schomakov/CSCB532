@@ -4,7 +4,33 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Справка: Служители</h2>
+    <h2 class="page-title"><i class="bi bi-person-badge"></i> Справка: Служители</h2>
+
+    <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-funnel"></i> Филтър</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/reports/employees}" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Име (първо или фамилия)</label>
+                    <input type="text" class="form-control" name="name" th:value="${filterName}" placeholder="част от име" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Офис</label>
+                    <select class="form-select" name="officeId">
+                        <option value="">-- Всички --</option>
+                        <option th:each="o : ${offices}" th:value="${o.id}" th:text="${o.name}" th:selected="${filterOfficeId != null and filterOfficeId == o.id}"></option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Търси</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><i class="bi bi-list-ul"></i> Списък</div>
+        <div class="card-body p-0">
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -13,7 +39,6 @@
                 <th>Име</th>
                 <th>Тип</th>
                 <th>Офис</th>
-                <th>Компания</th>
             </tr>
             </thead>
             <tbody>
@@ -22,10 +47,11 @@
                 <td th:text="${e.user != null ? (e.user.firstName + ' ' + e.user.lastName) : ''}">Name</td>
                 <td th:text="${e.type}">Type</td>
                 <td th:text="${e.office != null ? e.office.name : ''}">Office</td>
-                <td th:text="${e.company != null ? e.company.name : ''}">Company</td>
             </tr>
             </tbody>
         </table>
+    </div>
+        </div>
     </div>
 </main>
 <div th:replace="~{footer :: footer}"></div>

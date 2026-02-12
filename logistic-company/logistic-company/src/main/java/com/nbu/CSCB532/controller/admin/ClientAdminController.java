@@ -2,6 +2,7 @@ package com.nbu.CSCB532.controller.admin;
 
 import com.nbu.CSCB532.model.Role;
 import com.nbu.CSCB532.model.auth.User;
+import com.nbu.CSCB532.model.logistics.Address;
 import com.nbu.CSCB532.model.logistics.Client;
 import com.nbu.CSCB532.service.auth.UserService;
 import com.nbu.CSCB532.service.logistics.ClientService;
@@ -25,7 +26,9 @@ public class ClientAdminController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("clients", clientService.findAll());
-        model.addAttribute("client", new Client());
+        Client client = new Client();
+        client.setDefaultAddress(new Address());
+        model.addAttribute("client", client);
         List<User> clientUsers = userService.findAllUsers().stream()
                 .filter(u -> u.getRole() == Role.CLIENT)
                 .toList();
@@ -36,7 +39,12 @@ public class ClientAdminController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("clients", clientService.findAll());
-        model.addAttribute("client", clientService.findById(id).orElse(new Client()));
+        Client client = clientService.findById(id).orElseGet(() -> {
+            Client c = new Client();
+            c.setDefaultAddress(new Address());
+            return c;
+        });
+        model.addAttribute("client", client);
         List<User> clientUsers = userService.findAllUsers().stream()
                 .filter(u -> u.getRole() == Role.CLIENT)
                 .toList();

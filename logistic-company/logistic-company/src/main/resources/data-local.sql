@@ -1,42 +1,178 @@
--- Пълни данни за локален профил (H2). Всички пароли: password (bcrypt)
--- Потребители: admin, dimitar (ADMIN), emp.office, emp.courier (EMPLOYEE), client.alex, client.maria (CLIENT)
+-- Пълни данни за локален профил (H2). Поне 20 записа на таблица.
+-- Всички пароли: password (bcrypt)
+
+-- Потребители (2 admin + 20 employee + 20 client = 42)
 INSERT INTO users (id, username, password, email, role, first_name, last_name) VALUES
-(1, 'admin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'admin@company.com', 'ADMINISTRATOR', 'Admin', 'User'),
-(2, 'dimitar', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'dimitar@company.com', 'ADMINISTRATOR', 'Dimitar', 'User'),
-(3, 'emp.office', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'office@company.com', 'EMPLOYEE', 'Evelyn', 'Brown'),
-(4, 'emp.courier', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'courier@company.com', 'EMPLOYEE', 'George', 'Miller'),
-(5, 'client.alex', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'alex@domain.com', 'CLIENT', 'Alex', 'Cole'),
-(6, 'client.maria', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'maria@domain.com', 'CLIENT', 'Maria', 'Smith');
+(1, 'admin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'admin@logico.com', 'ADMINISTRATOR', 'Admin', 'User'),
+(2, 'admin2', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'admin2@logico.com', 'ADMINISTRATOR', 'Борис', 'Иванов'),
+(3, 'emp.office', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'office@logico.com', 'EMPLOYEE', 'Evelyn', 'Brown'),
+(4, 'emp.courier', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'courier@logico.com', 'EMPLOYEE', 'George', 'Miller'),
+(5, 'emp.ivan', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ivan@logico.com', 'EMPLOYEE', 'Иван', 'Петров'),
+(6, 'emp.maria', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'maria.emp@logico.com', 'EMPLOYEE', 'Мария', 'Георгиева'),
+(7, 'emp.dimitar', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'dimitar@logico.com', 'EMPLOYEE', 'Димитър', 'Стоянов'),
+(8, 'emp.anna', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'anna@logico.com', 'EMPLOYEE', 'Анна', 'Колева'),
+(9, 'emp.nikolay', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'nikolay@logico.com', 'EMPLOYEE', 'Николай', 'Димитров'),
+(10, 'emp.elena', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'elena@logico.com', 'EMPLOYEE', 'Елена', 'Иванова'),
+(11, 'emp.peter', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'peter@logico.com', 'EMPLOYEE', 'Peter', 'Wilson'),
+(12, 'emp.sophie', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'sophie@logico.com', 'EMPLOYEE', 'Sophie', 'Martin'),
+(13, 'emp.lucas', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'lucas@logico.com', 'EMPLOYEE', 'Lucas', 'Bernard'),
+(14, 'emp.yana', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'yana@logico.com', 'EMPLOYEE', 'Яна', 'Павлова'),
+(15, 'emp.stefan', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'stefan@logico.com', 'EMPLOYEE', 'Стефан', 'Тодоров'),
+(16, 'emp.radka', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'radka@logico.com', 'EMPLOYEE', 'Радка', 'Михайлова'),
+(17, 'emp.vladimir', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'vladimir@logico.com', 'EMPLOYEE', 'Владимир', 'Ангелов'),
+(18, 'emp.kristina', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'kristina@logico.com', 'EMPLOYEE', 'Кристина', 'Николова'),
+(19, 'emp.martin', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'martin@logico.com', 'EMPLOYEE', 'Мартин', 'Стефанов'),
+(20, 'emp.tanya', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'tanya@logico.com', 'EMPLOYEE', 'Таня', 'Вълчева'),
+(21, 'emp.hristo', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'hristo@logico.com', 'EMPLOYEE', 'Христо', 'Попов'),
+(22, 'emp.gabriela', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'gabriela@logico.com', 'EMPLOYEE', 'Габриела', 'Ламбева'),
+(23, 'client.alex', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'alex@mail.com', 'CLIENT', 'Alex', 'Cole'),
+(24, 'client.maria', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'maria@mail.com', 'CLIENT', 'Maria', 'Smith'),
+(25, 'client.georgi', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'georgi@mail.com', 'CLIENT', 'Георги', 'Маринов'),
+(26, 'client.diana', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'diana@mail.com', 'CLIENT', 'Диана', 'Васова'),
+(27, 'client.plamen', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'plamen@mail.com', 'CLIENT', 'Пламен', 'Костов'),
+(28, 'client.silvia', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'silvia@mail.com', 'CLIENT', 'Силвия', 'Димитрова'),
+(29, 'client.ivanov', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ivanov@mail.com', 'CLIENT', 'Иван', 'Иванов'),
+(30, 'client.petrova', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'petrova@mail.com', 'CLIENT', 'Елена', 'Петрова'),
+(31, 'client.john', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'john@mail.com', 'CLIENT', 'John', 'Davis'),
+(32, 'client.sarah', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'sarah@mail.com', 'CLIENT', 'Sarah', 'Johnson'),
+(33, 'client.michael', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'michael@mail.com', 'CLIENT', 'Michael', 'Brown'),
+(34, 'client.emily', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'emily@mail.com', 'CLIENT', 'Emily', 'Wilson'),
+(35, 'client.david', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'david@mail.com', 'CLIENT', 'David', 'Martinez'),
+(36, 'client.lisa', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'lisa@mail.com', 'CLIENT', 'Lisa', 'Anderson'),
+(37, 'client.james', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'james@mail.com', 'CLIENT', 'James', 'Taylor'),
+(38, 'client.nina', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'nina@mail.com', 'CLIENT', 'Нина', 'Спасова'),
+(39, 'client.vasil', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'vasil@mail.com', 'CLIENT', 'Васил', 'Йорданов'),
+(40, 'client.mihaela', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'mihaela@mail.com', 'CLIENT', 'Михаела', 'Русанова'),
+(41, 'client.ralitsa', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'ralitsa@mail.com', 'CLIENT', 'Ралица', 'Георгиева'),
+(42, 'client.toni', '$2a$10$dXJ3SW6G7P50lGmMkkmwe.20cQQubK3.HZWzG3YB1tlRy.fqvM/BG', 'toni@mail.com', 'CLIENT', 'Тони', 'Славов');
 
--- Компании
-INSERT INTO companies (id, name, registration_number, headquarters_address_country, headquarters_address_city, headquarters_address_zip_code, headquarters_address_street, headquarters_address_details, description, created_at, updated_at) VALUES
-(1, 'LogiCo', 'BG123456789', 'Bulgaria', 'Sofia', '1000', 'Liberty Ave 1', 'HQ Floor 2', 'Main logistics company', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- Адреси (25 записа)
+INSERT INTO addresses (id, country, city, zip_code, street, details) VALUES
+(1, 'България', 'София', '1000', 'ул. Свобода 1', 'Ет. 2'),
+(2, 'България', 'София', '1000', 'ул. Главна 10', 'Приземен етаж'),
+(3, 'България', 'Пловдив', '4000', 'бул. Река 25', NULL),
+(4, 'България', 'София', '1000', 'ул. Дъбова 7', 'Апартамент 12'),
+(5, 'България', 'Пловдив', '4000', 'ул. Кленова 15', 'Ет. 3'),
+(6, 'България', 'Пловдив', '4000', 'ул. Пазарна 3', 'На ъгъла'),
+(7, 'България', 'София', '1000', 'ул. Московска 2', NULL),
+(8, 'България', 'Варна', '9000', 'бул. Княз Борис I 50', NULL),
+(9, 'България', 'Бургас', '8000', 'ул. Александровска 18', 'Офис 5'),
+(10, 'България', 'Русе', '7000', 'пл. Свобода 4', NULL),
+(11, 'България', 'Стара Загора', '6000', 'ул. Руски 22', NULL),
+(12, 'България', 'Плевен', '5800', 'ул. Княз Александър 7', NULL),
+(13, 'България', 'Сливен', '8800', 'бул. България 33', NULL),
+(14, 'България', 'Добрич', '9300', 'ул. 25-ти Септември 11', NULL),
+(15, 'България', 'Шумен', '9700', 'ул. Цар Освободител 9', NULL),
+(16, 'България', 'Перник', '2300', 'ул. Цар Самуил 2', NULL),
+(17, 'България', 'Хасково', '6300', 'бул. България 45', NULL),
+(18, 'България', 'Ямбол', '8600', 'ул. Иван Вазов 6', NULL),
+(19, 'България', 'Казанлък', '6100', 'ул. Розова 1', NULL),
+(20, 'България', 'Велико Търново', '5000', 'ул. Стефан Стамболов 15', NULL),
+(21, 'България', 'Габрово', '5300', 'ул. Иванку 8', NULL),
+(22, 'България', 'Асеновград', '4230', 'ул. Родопи 20', NULL),
+(23, 'България', 'Кърджали', '6600', 'ул. Република 3', NULL),
+(24, 'България', 'Разград', '7200', 'ул. Любен Каравелов 12', NULL),
+(25, 'България', 'Търговище', '7700', 'ул. Никола Петков 5', NULL);
 
--- Офиси
-INSERT INTO offices (id, company_id, name, address_country, address_city, address_zip_code, address_street, address_details, phone, email, working_hours, active) VALUES
-(1, 1, 'Sofia Center', 'Bulgaria', 'Sofia', '1000', 'Main St 10', 'Ground floor', '+359 2 123 456', 'sofia.center@logico.com', 'Mon-Fri 9:00-18:00', true),
-(2, 1, 'Plovdiv East', 'Bulgaria', 'Plovdiv', '4000', 'River Blvd 25', NULL, '+359 32 222 333', 'plovdiv.east@logico.com', 'Mon-Fri 9:00-18:00', true);
+-- Офиси (20 записа)
+INSERT INTO offices (id, name, address_id, phone, email, working_hours, active) VALUES
+(1, 'София Център', 2, '+359 2 123 456', 'sofia.center@logico.com', 'Пн-Пт 9:00-18:00', true),
+(2, 'Пловдив Изток', 3, '+359 32 222 333', 'plovdiv.east@logico.com', 'Пн-Пт 9:00-18:00', true),
+(3, 'Варна Морска', 8, '+359 52 444 555', 'varna@logico.com', 'Пн-Пт 8:00-17:00', true),
+(4, 'Бургас Юг', 9, '+359 56 666 777', 'burgas@logico.com', 'Пн-Пт 9:00-18:00', true),
+(5, 'Русе Север', 10, '+359 82 888 999', 'ruse@logico.com', 'Пн-Пт 9:00-17:30', true),
+(6, 'Стара Загора', 11, '+359 42 111 222', 'stz@logico.com', 'Пн-Пт 9:00-18:00', true),
+(7, 'Плевен', 12, '+359 64 333 444', 'pleven@logico.com', 'Пн-Пт 8:30-17:30', true),
+(8, 'Сливен', 13, '+359 44 555 666', 'sliven@logico.com', 'Пн-Пт 9:00-18:00', true),
+(9, 'Добрич', 14, '+359 58 777 888', 'dobrich@logico.com', 'Пн-Пт 9:00-17:00', true),
+(10, 'Шумен', 15, '+359 54 999 000', 'shumen@logico.com', 'Пн-Пт 9:00-18:00', true),
+(11, 'Перник', 16, '+359 76 121 212', 'pernik@logico.com', 'Пн-Пт 8:00-16:00', true),
+(12, 'Хасково', 17, '+359 38 323 434', 'haskovo@logico.com', 'Пн-Пт 9:00-18:00', true),
+(13, 'Ямбол', 18, '+359 46 545 656', 'yambol@logico.com', 'Пн-Пт 9:00-17:30', true),
+(14, 'Казанлък', 19, '+359 431 767 878', 'kazanlak@logico.com', 'Пн-Пт 9:00-18:00', true),
+(15, 'Велико Търново', 20, '+359 62 989 090', 'vt@logico.com', 'Пн-Пт 9:00-18:00', true),
+(16, 'Габрово', 21, '+359 66 101 111', 'gabrovo@logico.com', 'Пн-Пт 8:30-17:30', true),
+(17, 'Асеновград', 22, '+359 332 212 323', 'asenovgrad@logico.com', 'Пн-Пт 9:00-17:00', true),
+(18, 'Кърджали', 23, '+359 361 434 545', 'kardzhali@logico.com', 'Пн-Пт 9:00-18:00', true),
+(19, 'Разград', 24, '+359 84 656 767', 'razgrad@logico.com', 'Пн-Пт 9:00-17:00', true),
+(20, 'Търговище', 25, '+359 601 878 989', 'targovishte@logico.com', 'Пн-Пт 9:00-18:00', true);
 
--- Служители (id = user id)
-INSERT INTO employees (id, company_id, office_id, type, phone, active) VALUES
-(3, 1, 1, 'OFFICE_EMPLOYEE', '+359 888 111 222', true),
-(4, 1, 2, 'COURIER', '+359 888 333 444', true);
+-- Служители (20 записа: user id 3-22, office_id 1-20)
+INSERT INTO employees (id, office_id, type, phone, active) VALUES
+(3, 1, 'OFFICE_EMPLOYEE', '+359 888 111 222', true),
+(4, 2, 'COURIER', '+359 888 333 444', true),
+(5, 3, 'OFFICE_EMPLOYEE', '+359 888 555 666', true),
+(6, 4, 'COURIER', '+359 888 777 888', true),
+(7, 5, 'OFFICE_EMPLOYEE', '+359 888 999 000', true),
+(8, 6, 'COURIER', '+359 889 111 222', true),
+(9, 7, 'OFFICE_EMPLOYEE', '+359 889 333 444', true),
+(10, 8, 'COURIER', '+359 889 555 666', true),
+(11, 9, 'OFFICE_EMPLOYEE', '+359 889 777 888', true),
+(12, 10, 'COURIER', '+359 889 999 000', true),
+(13, 11, 'OFFICE_EMPLOYEE', '+359 890 111 222', true),
+(14, 12, 'COURIER', '+359 890 333 444', true),
+(15, 13, 'OFFICE_EMPLOYEE', '+359 890 555 666', true),
+(16, 14, 'COURIER', '+359 890 777 888', true),
+(17, 15, 'OFFICE_EMPLOYEE', '+359 890 999 000', true),
+(18, 16, 'COURIER', '+359 891 111 222', true),
+(19, 17, 'OFFICE_EMPLOYEE', '+359 891 333 444', true),
+(20, 18, 'COURIER', '+359 891 555 666', true),
+(21, 19, 'OFFICE_EMPLOYEE', '+359 891 777 888', true),
+(22, 20, 'COURIER', '+359 891 999 000', true);
 
--- Клиенти (id = user id)
-INSERT INTO clients (id, phone, default_address_country, default_address_city, default_address_zip_code, default_address_street, default_address_details) VALUES
-(5, '+359 888 555 666', 'Bulgaria', 'Sofia', '1000', 'Oak Street 7', 'Apt 12'),
-(6, '+359 888 777 888', 'Bulgaria', 'Plovdiv', '4000', 'Maple Street 15', 'Floor 3');
+-- Клиенти (20 записа: user id 23-42, default_address_id)
+INSERT INTO clients (id, phone, default_address_id) VALUES
+(23, '+359 888 555 666', 4),
+(24, '+359 888 777 888', 5),
+(25, '+359 892 111 222', 4),
+(26, '+359 892 333 444', 5),
+(27, '+359 892 555 666', 6),
+(28, '+359 892 777 888', 7),
+(29, '+359 892 999 000', 4),
+(30, '+359 893 111 222', 5),
+(31, '+359 893 333 444', 6),
+(32, '+359 893 555 666', 7),
+(33, '+359 893 777 888', 4),
+(34, '+359 893 999 000', 5),
+(35, '+359 894 111 222', 6),
+(36, '+359 894 333 444', 7),
+(37, '+359 894 555 666', 4),
+(38, '+359 894 777 888', 5),
+(39, '+359 894 999 000', 6),
+(40, '+359 895 111 222', 7),
+(41, '+359 895 333 444', 4),
+(42, '+359 895 555 666', 5);
 
--- Пратки
--- Пратки
-INSERT INTO parcels (id, sender_id, recipient_name, recipient_phone, recipient_client_id, delivery_type, from_office_id, to_office_id, delivery_address_country, delivery_address_city, delivery_address_zip_code, delivery_address_street, delivery_address_details, courier_id, registered_by_employee_id, weight_kg, price, status, tracking_code, created_at, updated_at, delivered_at) VALUES
-(1, 5, 'John Peterson', '+359 888 000 111', NULL, 'TO_OFFICE', 1, 2, NULL, NULL, NULL, NULL, NULL, 4, 3, 1.20, 7.80, 'REGISTERED', 'TRK-REG001', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(2, 6, 'Peter Johnson', '+359 888 000 222', NULL, 'TO_OFFICE', 2, 1, NULL, NULL, NULL, NULL, NULL, 4, 3, 2.50, 9.75, 'AT_OFFICE', 'TRK-ATF002', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(3, 5, 'Mary George', '+359 888 000 333', NULL, 'TO_ADDRESS', 1, NULL, 'Bulgaria', 'Plovdiv', '4000', 'Market St 3', 'Near corner', 4, 3, 0.90, 8.35, 'IN_TRANSIT', 'TRK-TRN003', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(4, 6, 'Alex Cole', '+359 888 000 444', 5, 'TO_ADDRESS', 2, NULL, 'Bulgaria', 'Sofia', '1000', 'Moscow St 2', NULL, 4, 3, 3.10, 12.65, 'DELIVERED', 'TRK-DLV004', DATEADD('DAY', -2, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP));
+-- Пратки (25 записа). paid_at: при SENDER_PAYS = created_at; при RECIPIENT_PAYS + DELIVERED = delivered_at; иначе NULL
+INSERT INTO parcels (id, sender_id, recipient_name, recipient_phone, recipient_client_id, delivery_type, from_office_id, to_office_id, delivery_address_id, courier_id, registered_by_employee_id, weight_kg, price, payment_type, status, tracking_code, description, created_at, updated_at, delivered_at, paid_at) VALUES
+(1, 23, 'John Peterson', '+359 888 000 111', NULL, 'TO_OFFICE', 1, 2, NULL, 4, 3, 1.20, 9.80, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG001', 'Документи', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(2, 24, 'Peter Johnson', '+359 888 000 222', NULL, 'TO_OFFICE', 2, 1, NULL, 4, 3, 2.50, 15.00, 'SENDER_PAYS', 'AT_OFFICE', 'TRK-ATF002', 'Книги', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(3, 23, 'Mary George', '+359 888 000 333', NULL, 'TO_ADDRESS', 1, NULL, 6, 6, 3, 0.90, 8.60, 'RECIPIENT_PAYS', 'IN_TRANSIT', 'TRK-TRN003', 'Малък пакет', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(4, 24, 'Alex Cole', '+359 888 000 444', 23, 'TO_ADDRESS', 2, NULL, 7, 6, 3, 3.10, 17.40, 'SENDER_PAYS', 'DELIVERED', 'TRK-DLV004', 'Електроника', DATEADD('DAY', -2, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP), DATEADD('DAY', -2, CURRENT_TIMESTAMP)),
+(5, 25, 'Иван Георгиев', '+359 877 111 222', NULL, 'TO_OFFICE', 3, 4, NULL, 6, 5, 1.50, 11.00, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG005', 'Одежда', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(6, 26, 'Диана Петрова', '+359 877 333 444', NULL, 'TO_OFFICE', 4, 3, NULL, 8, 5, 2.00, 13.00, 'RECIPIENT_PAYS', 'AT_OFFICE', 'TRK-ATF006', 'Козметика', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(7, 27, 'Пламен Стоянов', '+359 877 555 666', 25, 'TO_ADDRESS', 5, NULL, 8, 8, 7, 0.50, 7.00, 'SENDER_PAYS', 'IN_TRANSIT', 'TRK-TRN007', 'Писма', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(8, 28, 'Силвия Иванова', '+359 877 777 888', NULL, 'TO_OFFICE', 6, 7, NULL, 10, 7, 4.00, 21.00, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG008', 'Спортни стоки', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(9, 29, 'Иван Иванов', '+359 877 999 000', 26, 'TO_ADDRESS', 7, NULL, 9, 10, 9, 1.80, 12.20, 'RECIPIENT_PAYS', 'DELIVERED', 'TRK-DLV009', 'Детски стоки', DATEADD('DAY', -3, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP), DATEADD('DAY', -1, CURRENT_TIMESTAMP)),
+(10, 30, 'Елена Петрова', '+359 878 111 222', NULL, 'TO_OFFICE', 8, 9, NULL, 12, 9, 2.20, 13.80, 'SENDER_PAYS', 'AT_OFFICE', 'TRK-ATF010', 'Канцелария', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(11, 31, 'John Davis', '+359 878 333 444', NULL, 'TO_OFFICE', 9, 10, NULL, 12, 11, 3.50, 19.00, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG011', 'Hardware', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(12, 32, 'Sarah Johnson', '+359 878 555 666', 28, 'TO_ADDRESS', 10, NULL, 10, 14, 11, 1.00, 9.00, 'RECIPIENT_PAYS', 'IN_TRANSIT', 'TRK-TRN012', 'Gifts', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(13, 33, 'Michael Brown', '+359 878 777 888', NULL, 'TO_OFFICE', 11, 12, NULL, 14, 13, 5.00, 25.00, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG013', 'Furniture parts', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(14, 34, 'Emily Wilson', '+359 878 999 000', NULL, 'TO_OFFICE', 12, 11, NULL, 16, 13, 0.80, 8.20, 'SENDER_PAYS', 'AT_OFFICE', 'TRK-ATF014', 'Jewelry', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(15, 35, 'David Martinez', '+359 879 111 222', 30, 'TO_ADDRESS', 13, NULL, 11, 16, 15, 2.80, 16.20, 'SENDER_PAYS', 'DELIVERED', 'TRK-DLV015', 'Electronics', DATEADD('DAY', -5, CURRENT_TIMESTAMP), DATEADD('DAY', -2, CURRENT_TIMESTAMP), DATEADD('DAY', -2, CURRENT_TIMESTAMP), DATEADD('DAY', -5, CURRENT_TIMESTAMP)),
+(16, 36, 'Lisa Anderson', '+359 879 333 444', NULL, 'TO_OFFICE', 14, 15, NULL, 18, 15, 1.20, 9.80, 'RECIPIENT_PAYS', 'REGISTERED', 'TRK-REG016', 'Books', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(17, 37, 'James Taylor', '+359 879 555 666', NULL, 'TO_ADDRESS', 15, NULL, 12, 18, 17, 6.00, 29.00, 'SENDER_PAYS', 'IN_TRANSIT', 'TRK-TRN017', 'Heavy equipment', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(18, 38, 'Нина Спасова', '+359 879 777 888', 33, 'TO_OFFICE', 16, 17, NULL, 20, 17, 1.50, 11.00, 'SENDER_PAYS', 'AT_OFFICE', 'TRK-ATF018', 'Медикаменти', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(19, 39, 'Васил Йорданов', '+359 879 999 000', NULL, 'TO_OFFICE', 17, 18, NULL, 20, 19, 2.30, 14.20, 'RECIPIENT_PAYS', 'REGISTERED', 'TRK-REG019', 'Строителни материали', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(20, 40, 'Михаела Русанова', '+359 880 111 222', NULL, 'TO_ADDRESS', 18, NULL, 13, 22, 19, 0.70, 7.80, 'SENDER_PAYS', 'DELIVERED', 'TRK-DLV020', 'Цветя', DATEADD('DAY', -1, CURRENT_TIMESTAMP), CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, DATEADD('DAY', -1, CURRENT_TIMESTAMP)),
+(21, 41, 'Ралица Георгиева', '+359 880 333 444', 35, 'TO_OFFICE', 19, 20, NULL, 22, 21, 3.20, 17.80, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG021', 'Обувки', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(22, 42, 'Тони Славов', '+359 880 555 666', NULL, 'TO_OFFICE', 20, 19, NULL, 4, 21, 4.50, 23.00, 'RECIPIENT_PAYS', 'AT_OFFICE', 'TRK-ATF022', 'Инструменти', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, NULL),
+(23, 23, 'Получател Двадесет и три', '+359 880 777 888', 36, 'TO_ADDRESS', 1, NULL, 14, 6, 3, 1.10, 9.40, 'SENDER_PAYS', 'IN_TRANSIT', 'TRK-TRN023', 'Самолетни билети', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(24, 25, 'Получател Двадесет и пет', '+359 880 999 000', NULL, 'TO_OFFICE', 2, 3, NULL, 8, 3, 2.60, 15.40, 'SENDER_PAYS', 'REGISTERED', 'TRK-REG024', 'Резервни части', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL, CURRENT_TIMESTAMP),
+(25, 30, 'Получател Тридесет', '+359 881 111 222', 38, 'TO_ADDRESS', 5, NULL, 15, 10, 7, 7.00, 33.00, 'RECIPIENT_PAYS', 'DELIVERED', 'TRK-DLV025', 'Голяма пратка', DATEADD('DAY', -7, CURRENT_TIMESTAMP), DATEADD('DAY', -4, CURRENT_TIMESTAMP), DATEADD('DAY', -4, CURRENT_TIMESTAMP), DATEADD('DAY', -4, CURRENT_TIMESTAMP));
 
--- H2: синхронизиране на IDENTITY за следващи вмъквания
-ALTER TABLE users ALTER COLUMN id RESTART WITH 7;
-ALTER TABLE companies ALTER COLUMN id RESTART WITH 2;
-ALTER TABLE offices ALTER COLUMN id RESTART WITH 3;
-ALTER TABLE parcels ALTER COLUMN id RESTART WITH 5;
+-- H2: синхронизиране на IDENTITY
+ALTER TABLE users ALTER COLUMN id RESTART WITH 43;
+ALTER TABLE addresses ALTER COLUMN id RESTART WITH 26;
+ALTER TABLE offices ALTER COLUMN id RESTART WITH 21;
+ALTER TABLE parcels ALTER COLUMN id RESTART WITH 26;

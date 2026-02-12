@@ -17,10 +17,6 @@ public class OfficeService {
         return officeRepository.findAll();
     }
 
-    public List<Office> findByCompany(Long companyId) {
-        return officeRepository.findByCompanyId(companyId);
-    }
-
     public Optional<Office> findById(Long id) {
         return officeRepository.findById(id);
     }

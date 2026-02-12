@@ -9,8 +9,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -71,13 +69,22 @@ class ReportsControllerTest {
     }
 
     @Test
-    @WithMockUser(authorities = "EMPLOYEE")
+    @WithMockUser(authorities = "ADMINISTRATOR")
     void revenue_withFromTo_returnsRevenueView() throws Exception {
         mockMvc.perform(get("/reports/revenue")
                         .param("from", "2026-01-01")
                         .param("to", "2026-12-31"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("reports/revenue"));
+    }
+
+    @Test
+    @WithMockUser(authorities = "EMPLOYEE")
+    void revenue_asEmployee_forbidden() throws Exception {
+        mockMvc.perform(get("/reports/revenue")
+                        .param("from", "2026-01-01")
+                        .param("to", "2026-12-31"))
+                .andExpect(status().isForbidden());
     }
 
     @Test

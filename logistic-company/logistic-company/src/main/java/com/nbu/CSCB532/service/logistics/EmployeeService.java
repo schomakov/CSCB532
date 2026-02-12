@@ -18,8 +18,22 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public List<Employee> findByCompany(Long companyId) {
-        return employeeRepository.findByCompanyId(companyId);
+    /** Филтриране по име (в първо/фамилия) и/или офис. Празни стойности = без филтър. */
+    public List<Employee> findFiltered(String name, Long officeId) {
+        boolean hasName = name != null && !name.isBlank();
+        boolean hasOffice = officeId != null;
+        if (!hasName && !hasOffice) return employeeRepository.findAll();
+        if (hasName && !hasOffice) return employeeRepository.findByUserNameContainingIgnoreCase(name.trim());
+        if (!hasName && hasOffice) return employeeRepository.findByOfficeId(officeId);
+        return employeeRepository.findByOfficeId(officeId).stream()
+                .filter(e -> e.getUser() != null && matchesName(e.getUser().getFirstName(), e.getUser().getLastName(), name.trim()))
+                .toList();
+    }
+
+    private static boolean matchesName(String first, String last, String search) {
+        if (search == null || search.isBlank()) return true;
+        String full = (first != null ? first : "") + " " + (last != null ? last : "");
+        return full.toLowerCase().contains(search.toLowerCase());
     }
 
     public List<Employee> findByType(EmployeeType type) {

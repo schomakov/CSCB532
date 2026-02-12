@@ -3,6 +3,9 @@ package com.nbu.CSCB532.model.logistics;
 import jakarta.persistence.*;
 import lombok.*;
 
+import static jakarta.persistence.CascadeType.MERGE;
+import static jakarta.persistence.CascadeType.PERSIST;
+
 @Entity
 @Table(name = "offices")
 @Data
@@ -14,21 +17,11 @@ public class Office {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id")
-    private Company company;
-
     @Column(nullable = false)
     private String name;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "address_country")),
-            @AttributeOverride(name = "city", column = @Column(name = "address_city")),
-            @AttributeOverride(name = "zipCode", column = @Column(name = "address_zip_code")),
-            @AttributeOverride(name = "street", column = @Column(name = "address_street")),
-            @AttributeOverride(name = "details", column = @Column(name = "address_details"))
-    })
+    @ManyToOne(optional = false, cascade = {PERSIST, MERGE})
+    @JoinColumn(name = "address_id")
     private Address address;
 
     private String phone;

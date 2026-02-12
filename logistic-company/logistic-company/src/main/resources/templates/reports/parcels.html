@@ -4,7 +4,31 @@
 <body class="d-flex flex-column min-vh-100">
 <div th:replace="~{header :: header}"></div>
 <main class="container mt-4">
-    <h2>Справка: Пратки</h2>
+    <h2 class="page-title"><i class="bi bi-box-seam"></i> Справка: Пратки</h2>
+
+    <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-funnel"></i> Филтър (при справка „Всички пратки“)</div>
+        <div class="card-body">
+            <form method="get" th:action="@{/reports/parcels/all}" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Получател (име)</label>
+                    <input type="text" class="form-control" name="recipientName" th:value="${filterRecipientName}" placeholder="част от име на получател" />
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Подател (име)</label>
+                    <input type="text" class="form-control" name="senderName" th:value="${filterSenderName}" placeholder="част от име на подател" />
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search me-1"></i> Търси</button>
+                </div>
+            </form>
+            <p class="small text-muted mb-0 mt-2">Търсене по част от име на получател и/или подател. Празни полета = без филтър.</p>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><i class="bi bi-list-ul"></i> Списък</div>
+        <div class="card-body p-0">
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
@@ -17,7 +41,9 @@
                 <th>Статус</th>
                 <th>Цена</th>
                 <th>Регистрирана от</th>
-                <th>Доставена на</th>
+                <th>Регистрация (дата/час)</th>
+                <th>Доставка/взимане (дата/час)</th>
+                <th>Плащане (дата/час)</th>
             </tr>
             </thead>
             <tbody>
@@ -30,10 +56,14 @@
                 <td th:text="${p.status}">Status</td>
                 <td th:text="${p.price}">0.00</td>
                 <td th:text="${p.registeredBy != null && p.registeredBy.user != null ? (p.registeredBy.user.firstName + ' ' + p.registeredBy.user.lastName) : ''}">Emp</td>
-                <td th:text="${p.deliveredAt}">-</td>
+                <td th:text="${p.createdAt != null ? #temporals.format(p.createdAt, 'dd.MM.yyyy HH:mm') : '-'}">-</td>
+                <td th:text="${p.deliveredAt != null ? #temporals.format(p.deliveredAt, 'dd.MM.yyyy HH:mm') : '-'}">-</td>
+                <td th:text="${p.paidAt != null ? #temporals.format(p.paidAt, 'dd.MM.yyyy HH:mm') : '-'}">-</td>
             </tr>
             </tbody>
         </table>
+    </div>
+        </div>
     </div>
 </main>
 <div th:replace="~{footer :: footer}"></div>

@@ -19,10 +19,6 @@ public class Employee {
     @JoinColumn(name = "id")
     private User user;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id")
-    private Company company;
-
     @ManyToOne
     @JoinColumn(name = "office_id")
     private Office office; // assigned office (optional)

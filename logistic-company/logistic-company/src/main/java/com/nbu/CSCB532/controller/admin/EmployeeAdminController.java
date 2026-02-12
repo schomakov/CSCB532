@@ -5,7 +5,6 @@ import com.nbu.CSCB532.model.auth.User;
 import com.nbu.CSCB532.model.logistics.Employee;
 import com.nbu.CSCB532.model.logistics.EmployeeType;
 import com.nbu.CSCB532.service.auth.UserService;
-import com.nbu.CSCB532.service.logistics.CompanyService;
 import com.nbu.CSCB532.service.logistics.EmployeeService;
 import com.nbu.CSCB532.service.logistics.OfficeService;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +22,12 @@ import java.util.List;
 public class EmployeeAdminController {
 
     private final EmployeeService employeeService;
-    private final CompanyService companyService;
     private final OfficeService officeService;
     private final UserService userService;
 
     @GetMapping
     public String list(Model model) {
         model.addAttribute("employees", employeeService.findAll());
-        model.addAttribute("companies", companyService.findAll());
         model.addAttribute("offices", officeService.findAll());
         model.addAttribute("employee", new Employee());
         // Only users with EMPLOYEE role
@@ -45,7 +42,6 @@ public class EmployeeAdminController {
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("employees", employeeService.findAll());
-        model.addAttribute("companies", companyService.findAll());
         model.addAttribute("offices", officeService.findAll());
         model.addAttribute("employee", employeeService.findById(id).orElse(new Employee()));
         List<User> employeeUsers = userService.findAllUsers().stream()

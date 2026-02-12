@@ -1,7 +1,7 @@
 package com.nbu.CSCB532.controller.admin;
 
+import com.nbu.CSCB532.model.logistics.Address;
 import com.nbu.CSCB532.model.logistics.Office;
-import com.nbu.CSCB532.service.logistics.CompanyService;
 import com.nbu.CSCB532.service.logistics.OfficeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,21 +16,25 @@ import org.springframework.web.bind.annotation.*;
 public class OfficeAdminController {
 
     private final OfficeService officeService;
-    private final CompanyService companyService;
 
     @GetMapping
     public String list(Model model) {
         model.addAttribute("offices", officeService.findAll());
-        model.addAttribute("companies", companyService.findAll());
-        model.addAttribute("office", new Office());
+        Office office = new Office();
+        office.setAddress(new Address());
+        model.addAttribute("office", office);
         return "admin/offices";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("offices", officeService.findAll());
-        model.addAttribute("companies", companyService.findAll());
-        model.addAttribute("office", officeService.findById(id).orElse(new Office()));
+        Office office = officeService.findById(id).orElseGet(() -> {
+            Office o = new Office();
+            o.setAddress(new Address());
+            return o;
+        });
+        model.addAttribute("office", office);
         return "admin/offices";
     }
 

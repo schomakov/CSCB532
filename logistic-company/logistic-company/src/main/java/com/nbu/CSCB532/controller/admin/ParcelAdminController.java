@@ -25,24 +25,36 @@ public class ParcelAdminController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("parcels", parcelService.findAll());
-        model.addAttribute("parcel", new Parcel());
+        Parcel parcel = new Parcel();
+        parcel.setDeliveryAddress(new Address());
+        model.addAttribute("parcel", parcel);
         model.addAttribute("clients", clientService.findAll());
         model.addAttribute("employees", employeeService.findAll());
         model.addAttribute("offices", officeService.findAll());
         model.addAttribute("deliveryTypes", DeliveryType.values());
         model.addAttribute("parcelStatuses", ParcelStatus.values());
+        model.addAttribute("paymentTypes", PaymentType.values());
         return "admin/parcels";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
         model.addAttribute("parcels", parcelService.findAll());
-        model.addAttribute("parcel", parcelService.findById(id).orElse(new Parcel()));
+        Parcel parcel = parcelService.findById(id).orElseGet(() -> {
+            Parcel p = new Parcel();
+            p.setDeliveryAddress(new Address());
+            return p;
+        });
+        if (parcel.getDeliveryAddress() == null) {
+            parcel.setDeliveryAddress(new Address());
+        }
+        model.addAttribute("parcel", parcel);
         model.addAttribute("clients", clientService.findAll());
         model.addAttribute("employees", employeeService.findAll());
         model.addAttribute("offices", officeService.findAll());
         model.addAttribute("deliveryTypes", DeliveryType.values());
         model.addAttribute("parcelStatuses", ParcelStatus.values());
+        model.addAttribute("paymentTypes", PaymentType.values());
         return "admin/parcels";
     }
 
